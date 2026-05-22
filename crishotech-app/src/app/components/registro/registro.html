@@ -37,7 +37,7 @@
               [(ngModel)]="nombre"
               name="nombre"
               (input)="validarNombreEnTiempoReal()"
-              class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+              class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
             @if (errorNombre) {
               <p class="text-red-500 text-xs mt-1">{{ errorNombre }}</p>
@@ -52,7 +52,7 @@
               [(ngModel)]="apellido"
               name="apellido"
               (input)="validarApellidoEnTiempoReal()"
-              class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+              class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
             @if (errorApellido) {
               <p class="text-red-500 text-xs mt-1">{{ errorApellido }}</p>
@@ -68,7 +68,7 @@
             [(ngModel)]="email"
             name="email"
             (input)="validarEmailEnTiempoReal()"
-            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
           @if (errorEmail) {
             <p class="text-red-500 text-xs mt-1">{{ errorEmail }}</p>
@@ -83,7 +83,7 @@
             [(ngModel)]="password"
             name="password"
             (keyup)="validarPasswordEnTiempoReal()"
-            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
           @if (errorPassword) {
             <p class="text-red-500 text-xs mt-1">{{ errorPassword }}</p>

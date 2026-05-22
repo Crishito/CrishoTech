@@ -40,9 +40,9 @@
             type="email"
             [(ngModel)]="email"
             name="email"
-            placeholder="admin@crishotech.com"
+            
             (input)="validarEmailEnTiempoReal()"
-            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
           @if (errorEmail) {
             <p class="text-red-500 text-xs mt-1">
@@ -60,9 +60,9 @@
             type="password"
             [(ngModel)]="password"
             name="password"
-            placeholder="••••••••"
+            
             (keyup)="validarPasswordEnTiempoReal()"
-            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
           @if (errorPassword) {
             <p class="text-red-500 text-xs mt-1">

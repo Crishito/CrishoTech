@@ -1,4 +1,4 @@
-<section id="servicios" class="py-24 bg-white">
+<section id="servicios" class="py-24 bg-cover bg-center bg-no-repeat" style="background-image: url('/img/fondo_servicios.jpg');">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
     <div class="text-center mb-16">
@@ -17,14 +17,16 @@
 
       @for (servicio of servicios; track servicio.nombre) {
         <div class="p-8 bg-gray-50 rounded-3xl border border-gray-100 hover:shadow-xl transition-all group relative flex flex-col h-full">
-
+          
           <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
             <i [class]="servicio.icono"></i>
+
           </div>
 
           <h3 class="text-xl font-bold mb-3">
             {{ servicio.nombre }}
           </h3>
+          <img [src]="servicio.imagen" alt="imagen servicio" class="w-full h-40 object-cover rounded-xl mb-4">
 
           <p class="text-gray-600 leading-relaxed mb-6 flex-grow">
             {{ servicio.descripcion }}
@@ -34,7 +36,6 @@
           <button
             (click)="abrirModal(servicio.nombre)"
             class="w-full py-3 rounded-xl border-2 border-blue-600 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition mt-auto">
-            <i class="fa-solid fa-plus mr-2"></i>
             Solicitar
           </button>
 

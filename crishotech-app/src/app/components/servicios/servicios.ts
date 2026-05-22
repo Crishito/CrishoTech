@@ -44,28 +44,39 @@ export class Servicios {
     {
       nombre: 'Mantenimiento Preventivo',
       icono: 'fa-solid fa-fan text-blue-600 text-2xl group-hover:text-white',
+      imagen: '/img/mantenimiento-preventivo.jpg',
       descripcion: 'Limpieza interna profunda, optimización de software y cambio de pasta térmica para prolongar la vida útil de tus equipos.'
     },
     {
       nombre: 'Mantenimiento Correctivo',
       icono: 'fa-solid fa-screwdriver-wrench text-blue-600 text-2xl group-hover:text-white',
+      imagen: '/img/mantenimiento-correctivo.jpg',
       descripcion: 'Diagnóstico y reparación de fallas de hardware y software, reemplazo de componentes y solución de problemas críticos.'
     },
     {
-      nombre: 'Instalación de Sistemas Op.',
+      nombre: 'Instalación de Sistemas Operativos.',
       icono: 'fa-solid fa-compact-disc text-blue-600 text-2xl group-hover:text-white',
+      imagen: '/img/instalacion-sistemas-operativo.jpg',
       descripcion: 'Formateo, instalación limpia de Windows, Linux o macOS, configuración inicial y drivers esenciales.'
     },
     {
       nombre: 'Instalación de Programas',
       icono: 'fa-solid fa-box-open text-blue-600 text-2xl group-hover:text-white',
+      imagen: '/img/instalacion-programas.jpg',
       descripcion: 'Paquete Office, navegadores, antivirus y software básico para tu trabajo o estudio.'
     },
     {
       nombre: 'Optimización y Seguridad',
       icono: 'fa-solid fa-shield-virus text-blue-600 text-2xl group-hover:text-white',
+      imagen: '/img/seguridad.jpg',
       descripcion: 'Aceleración del sistema, eliminación de virus y malware, y configuración de actualizaciones para un rendimiento óptimo.'
     }
+    /*{
+      nombre: 'Venta de Componentes',
+      icono: 'fa-solid fa-microchip text-blue-600 text-2xl group-hover:text-white',
+      imagen: '/img/venta-componentes.jpg',
+      descripcion: 'Ofrecemos componentes de hardware de alta calidad para actualización y ensamblaje de computadoras, con asesoría personalizada.'
+    }*/
   ];
 
   abrirModal(nombreServicio: string) {
