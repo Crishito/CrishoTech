@@ -1,0 +1,134 @@
+<!-- HEADER / BARRA DE NAVEGACIÓN -->
+<header id="main-nav" class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all">
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- CONTENIDO DEL NAVBAR -->
+    <div class="flex justify-between items-center h-20">
+
+      <!-- LOGO -->
+      <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
+
+        <!-- ÍCONO -->
+        <div class="bg-blue-600 p-2 rounded-lg">
+          <i class="fa-solid fa-microchip text-white text-xl"></i>
+        </div>
+
+        <!-- NOMBRE -->
+        <span class="font-bold text-2xl tracking-tight text-blue-900">
+          CrishoTech
+        </span>
+
+      </div>
+
+      <!-- MENÚ DESKTOP -->
+      <div class="hidden md:flex space-x-8 items-center">
+
+        <!-- BOTÓN INICIO -->
+        <button
+          (click)="irASeccion('inicio')"
+          class="text-gray-600 hover:text-blue-600 font-medium transition">
+          Inicio
+        </button>
+
+        <!-- BOTÓN PROPÓSITO -->
+        <button
+          (click)="irASeccion('mision-vision')"
+          class="text-gray-600 hover:text-blue-600 font-medium transition">
+          Nuestro Propósito
+        </button>
+
+        <!-- BOTÓN SERVICIOS -->
+        <button
+          (click)="irASeccion('servicios')"
+          class="text-gray-600 hover:text-blue-600 font-medium transition">
+          Servicios
+        </button>
+
+        <!-- BOTÓN CONTACTO -->
+        <button
+          (click)="irASeccion('contacto')"
+          class="text-gray-600 hover:text-blue-600 font-medium transition">
+          Contacto
+        </button>
+
+        <!-- OPCIONES SI EL USUARIO NO HA INICIADO SESIÓN -->
+        @if (!authService.estaLogueado()) {
+
+          <div class="flex gap-4 items-center">
+
+            <!-- LOGIN -->
+            <button routerLink="/login" class="text-blue-600 font-semibold">
+              Iniciar Sesión
+            </button>
+
+            <!-- REGISTRO -->
+            <button
+              routerLink="/registro"
+              class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold transition shadow-md">
+              Registrarse
+            </button>
+
+          </div>
+
+        }
+
+        <!-- OPCIONES PARA CLIENTE -->
+        @if (authService.esUsuario()) {
+
+          <!-- HISTORIAL -->
+          <button routerLink="/historial" class="relative cursor-pointer" title="Mis Solicitudes">
+            <i class="fa-solid fa-clock-rotate-left text-gray-600 text-xl hover:text-blue-600 transition"></i>
+          </button>
+
+          <!-- CARRITO -->
+          <button routerLink="/carrito" class="relative cursor-pointer" title="Mi Carrito">
+            <i class="fa-solid fa-cart-shopping text-gray-600 text-xl hover:text-blue-600 transition"></i>
+          </button>
+
+          <!-- ETIQUETA CLIENTE -->
+          <span class="bg-sky-100 text-sky-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
+            Cliente
+          </span>
+
+          <!-- CERRAR SESIÓN -->
+          <button
+            (click)="cerrarSesion()"
+            class="text-gray-400 hover:text-red-500"
+            title="Cerrar Sesión">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+
+        }
+
+        <!-- OPCIONES PARA ADMIN -->
+        @if (authService.esAdmin()) {
+
+          <!-- PANEL ADMIN -->
+          <button routerLink="/admin" class="text-gray-600 hover:text-blue-600 font-medium transition">
+            Panel Técnico
+          </button>
+
+          <!-- ETIQUETA ADMIN -->
+          <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
+            Admin
+          </span>
+
+          <!-- CERRAR SESIÓN -->
+          <button
+            (click)="cerrarSesion()"
+            class="text-gray-400 hover:text-red-500"
+            title="Cerrar Sesión">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>

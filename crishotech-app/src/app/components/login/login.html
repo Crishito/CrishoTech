@@ -1,0 +1,90 @@
+<section class="pt-32 pb-20 bg-gray-100 min-h-screen">
+  <div class="max-w-md mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+    <div class="p-8">
+
+      <div class="flex justify-center mb-8">
+        <div class="inline-flex rounded-lg bg-gray-100 p-1">
+
+          <button
+            type="button"
+            class="px-6 py-2 rounded-md bg-white shadow-sm font-bold text-blue-600 transition">
+            Login
+          </button>
+
+          <button
+            type="button"
+            routerLink="/registro"
+            class="px-6 py-2 rounded-md text-gray-500 font-bold hover:text-blue-600 transition">
+            Registro
+          </button>
+
+        </div>
+      </div>
+
+      <form
+        class="space-y-6"
+        (submit)="iniciarSesion($event)"
+        (keydown)="atajoLogin($event)"
+        novalidate>
+
+        <h2 class="text-2xl font-bold text-gray-800 text-center">
+          Iniciar Sesión
+        </h2>
+
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="admin@crishotech.com"
+            (input)="validarEmailEnTiempoReal()"
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+
+          @if (errorEmail) {
+            <p class="text-red-500 text-xs mt-1">
+              {{ errorEmail }}
+            </p>
+          }
+        </div>
+
+        <div class="relative">
+          <label class="block text-sm font-medium text-gray-700">
+            Contraseña
+          </label>
+
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="••••••••"
+            (keyup)="validarPasswordEnTiempoReal()"
+            class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 outline-none">
+
+          @if (errorPassword) {
+            <p class="text-red-500 text-xs mt-1">
+              {{ errorPassword }}
+            </p>
+          }
+        </div>
+
+        @if (errorGeneral) {
+          <p class="text-red-500 text-sm text-center font-semibold">
+            {{ errorGeneral }}
+          </p>
+        }
+
+        <button
+          type="submit"
+          class="w-full bg-blue-600 py-4 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition">
+          Iniciar Sesión
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+</section>

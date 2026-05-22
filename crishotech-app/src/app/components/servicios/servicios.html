@@ -1,0 +1,218 @@
+<section id="servicios" class="py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="text-center mb-16">
+      <h2 class="text-blue-600 font-bold tracking-widest uppercase text-sm mb-3">
+        Servicios de Calidad
+      </h2>
+
+      <p class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        ¿En qué podemos ayudarte?
+      </p>
+
+      <div class="h-1.5 w-20 bg-blue-600 mx-auto rounded-full"></div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+      @for (servicio of servicios; track servicio.nombre) {
+        <div class="p-8 bg-gray-50 rounded-3xl border border-gray-100 hover:shadow-xl transition-all group relative flex flex-col h-full">
+
+          <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+            <i [class]="servicio.icono"></i>
+          </div>
+
+          <h3 class="text-xl font-bold mb-3">
+            {{ servicio.nombre }}
+          </h3>
+
+          <p class="text-gray-600 leading-relaxed mb-6 flex-grow">
+            {{ servicio.descripcion }}
+          </p>
+
+          <!-- Evento (click): abre el modal del servicio seleccionado -->
+          <button
+            (click)="abrirModal(servicio.nombre)"
+            class="w-full py-3 rounded-xl border-2 border-blue-600 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition mt-auto">
+            <i class="fa-solid fa-plus mr-2"></i>
+            Solicitar
+          </button>
+
+        </div>
+      }
+
+    </div>
+  </div>
+</section>
+
+<section id="agendar-citas" class="py-24 bg-blue-600 text-white">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+    <h2 class="text-3xl md:text-4xl font-bold mb-6">
+      ¿Necesitas un Servicio a Domicilio?
+    </h2>
+
+    <p class="text-lg text-blue-100 mb-8">
+      Agenda tu mantenimiento o asesoría técnica directamente en tu hogar u oficina.
+      Rápido, fácil y organizado.
+    </p>
+
+    <!-- Evento (click): abre el modal para servicio a domicilio -->
+    <button
+      (click)="abrirModal('Servicio a Domicilio')"
+      class="bg-white text-blue-600 px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-blue-50 transition">
+      <i class="fa-solid fa-calendar-check mr-3"></i>
+      Solicitar Servicio a Domicilio
+    </button>
+
+  </div>
+</section>
+
+@if (modalAbierto) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
+
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
+
+      <div class="bg-blue-600 p-6 text-white flex justify-between items-center">
+        <h3 class="text-xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-file-signature"></i>
+          Solicitud: <span>{{ servicioSeleccionado }}</span>
+        </h3>
+
+        <!-- Evento (click): cierra el modal -->
+        <button
+          (click)="cerrarModal()"
+          class="text-white/80 hover:text-white text-2xl">
+          &times;
+        </button>
+      </div>
+
+      <!-- Evento (submit): valida y guarda la solicitud -->
+      <form class="p-8 space-y-4" (submit)="guardarSolicitud($event)" novalidate>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase">
+              Nombre Completo
+            </label>
+
+            <input
+              type="text"
+              [(ngModel)]="solicitud.nombre"
+              name="nombre"
+              (input)="validarNombreEnTiempoReal()"
+              class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-sky-400">
+
+            @if (errores.nombre) {
+              <p class="text-red-500 text-xs mt-1">{{ errores.nombre }}</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase">
+              Cédula / ID
+            </label>
+
+            <input
+              type="text"
+              maxlength="10"
+              [(ngModel)]="solicitud.cedula"
+              name="cedula"
+              (keydown)="bloquearLetras($event)"
+              (input)="limpiarCedula()"
+              (keyup)="validarCedulaEnTiempoReal()"
+              class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-sky-400">
+
+            @if (errores.cedula) {
+              <p class="text-red-500 text-xs mt-1">{{ errores.cedula }}</p>
+            }
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase">
+              Teléfono
+            </label>
+
+            <input
+              type="tel"
+              maxlength="10"
+              [(ngModel)]="solicitud.telefono"
+              name="telefono"
+              (keydown)="bloquearLetras($event)"
+              (input)="limpiarTelefono()"
+              (keyup)="validarTelefonoEnTiempoReal()"
+              class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-sky-400">
+
+            @if (errores.telefono) {
+              <p class="text-red-500 text-xs mt-1">{{ errores.telefono }}</p>
+            }
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase">
+              Correo
+            </label>
+
+            <input
+              type="email"
+              [(ngModel)]="solicitud.correo"
+              name="correo"
+              (input)="validarCorreoEnTiempoReal()"
+              class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-sky-400">
+
+            @if (errores.correo) {
+              <p class="text-red-500 text-xs mt-1">{{ errores.correo }}</p>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase">
+            Dirección
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="solicitud.direccion"
+            name="direccion"
+            (input)="validarDireccionEnTiempoReal()"
+            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-sky-400">
+
+          @if (errores.direccion) {
+            <p class="text-red-500 text-xs mt-1">{{ errores.direccion }}</p>
+          }
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase">
+            Descripción del Requerimiento
+          </label>
+
+          <textarea
+            rows="3"
+            placeholder="Ej: Mi laptop no enciende..."
+            [(ngModel)]="solicitud.descripcion"
+            name="descripcion"
+            (keyup)="validarDescripcionEnTiempoReal()"
+            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-sky-400">
+          </textarea>
+
+          @if (errores.descripcion) {
+            <p class="text-red-500 text-xs mt-1">{{ errores.descripcion }}</p>
+          }
+        </div>
+
+        <!-- Evento submit del formulario -->
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition">
+          Guardar y Añadir al Carrito
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+}

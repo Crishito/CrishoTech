@@ -1,0 +1,227 @@
+<section class="pt-32 pb-20 bg-gray-50 min-h-screen">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-3xl font-bold text-blue-900">
+        Mis Solicitudes (Historial)
+      </h2>
+
+      <button routerLink="/" class="text-blue-600 font-semibold flex items-center gap-2 hover:text-blue-800 transition">
+        <i class="fa-solid fa-house"></i>
+        Volver a Inicio
+      </button>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+
+      <table class="w-full text-left">
+        <thead class="bg-blue-50 border-b border-gray-200">
+          <tr>
+            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
+              Servicio / Descripción
+            </th>
+
+            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
+              Estado
+            </th>
+
+            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
+              Fecha
+            </th>
+
+            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-center">
+              Acciones
+            </th>
+          </tr>
+        </thead>
+
+        <tbody class="divide-y divide-gray-100">
+
+          @for (item of solicitudes; track item._id) {
+            <tr class="hover:bg-white transition">
+
+              <td class="px-6 py-4">
+                <div class="font-bold text-gray-800">
+                  {{ item.servicio }}
+                </div>
+
+                <div class="text-xs text-gray-500">
+                  {{ item.descripcion }}
+                </div>
+
+                <div class="text-xs text-gray-400 mt-1">
+                  Cliente: {{ item.nombre }} | Tel: {{ item.telefono }}
+                </div>
+              </td>
+
+              <td class="px-6 py-4">
+                <span
+                  class="px-3 py-1 text-[10px] font-bold rounded-full uppercase"
+                  [class.bg-yellow-100]="item.estado === 'Recibido'"
+                  [class.text-yellow-700]="item.estado === 'Recibido'"
+                  [class.bg-blue-100]="item.estado === 'En Proceso'"
+                  [class.text-blue-700]="item.estado === 'En Proceso'"
+                  [class.bg-green-100]="item.estado === 'Completado'"
+                  [class.text-green-700]="item.estado === 'Completado'">
+                  {{ item.estado }}
+                </span>
+              </td>
+
+              <td class="px-6 py-4 text-xs text-gray-500">
+                {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
+              </td>
+
+              <td class="px-6 py-4 text-center">
+                <div class="flex gap-2 justify-center">
+
+                  <button
+                    (click)="abrirChat(item)"
+                    class="bg-blue-50 text-blue-600 p-2 rounded-lg hover:bg-blue-600 hover:text-white"
+                    title="Chat / Seguimiento">
+                    <i class="fa-solid fa-comments"></i>
+                  </button>
+
+                  <button
+                    (click)="eliminarSolicitud(item._id)"
+                    class="bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-600 hover:text-white"
+                    title="Eliminar servicio">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+
+                </div>
+              </td>
+
+            </tr>
+          }
+
+        </tbody>
+      </table>
+
+      @if (solicitudes.length === 0) {
+        <div class="p-12 text-center text-gray-400">
+          <i class="fa-solid fa-folder-open text-5xl mb-4"></i>
+          <p>No tienes solicitudes activas en tu historial.</p>
+        </div>
+      }
+
+    </div>
+
+  </div>
+</section>
+
+<!-- MODAL CHAT / SEGUIMIENTO DEL USUARIO -->
+@if (modalChatAbierto && solicitudSeleccionada) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
+
+    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+
+      <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
+        <h3 class="text-xl font-bold flex items-center gap-2">
+          <i class="fa-solid fa-comment-dots"></i>
+          Seguimiento del Requerimiento
+        </h3>
+
+        <button
+          (click)="cerrarChat()"
+          class="text-white hover:text-gray-300 text-2xl">
+          &times;
+        </button>
+      </div>
+
+      <div class="p-6 overflow-y-auto space-y-6 flex-1">
+
+        <div class="grid grid-cols-2 gap-4 bg-blue-50 p-5 rounded-2xl border border-blue-100">
+
+          <div>
+            <p class="text-[10px] font-bold text-blue-400 uppercase">
+              Cliente
+            </p>
+
+            <p class="text-sm font-bold text-slate-800">
+              {{ solicitudSeleccionada.nombre }}
+            </p>
+          </div>
+
+          <div>
+            <p class="text-[10px] font-bold text-blue-400 uppercase">
+              Servicio solicitado
+            </p>
+
+            <p class="text-sm font-bold text-blue-600">
+              {{ solicitudSeleccionada.servicio }}
+            </p>
+          </div>
+
+          <div class="col-span-2">
+            <p class="text-[10px] font-bold text-blue-400 uppercase">
+              Descripción original
+            </p>
+
+            <p class="text-sm text-slate-600 italic">
+              {{ solicitudSeleccionada.descripcion }}
+            </p>
+          </div>
+
+        </div>
+
+        <div class="space-y-4">
+          <h4 class="font-bold text-slate-800 border-b pb-2">
+            Mensajes de Soporte
+          </h4>
+
+          <div class="space-y-3 flex flex-col min-h-[150px] max-h-[300px] overflow-y-auto">
+
+            @if (!solicitudSeleccionada.chat || solicitudSeleccionada.chat.length === 0) {
+              <p class="text-xs text-center text-gray-400 mt-4 italic">
+                No hay mensajes aún.
+              </p>
+            }
+
+            @for (msg of solicitudSeleccionada.chat || []; track msg.fecha) {
+              <div
+                class="max-w-[80%] p-3 rounded-2xl text-xs shadow-sm"
+                [class.chat-bubble-me]="msg.rol === 'usuario'"
+                [class.chat-bubble-them]="msg.rol === 'admin'">
+
+                <p class="font-bold mb-1 text-[10px] opacity-75">
+                  {{ msg.nombre }}
+                </p>
+
+                <p>
+                  {{ msg.mensaje }}
+                </p>
+
+                <p class="text-[9px] opacity-60 mt-1">
+                  {{ msg.fecha | date:'dd/MM/yyyy HH:mm' }}
+                </p>
+              </div>
+            }
+
+          </div>
+        </div>
+
+      </div>
+
+      <form
+        class="p-4 border-t bg-gray-50 flex gap-2"
+        (submit)="enviarMensajeChat($event)">
+
+        <input
+          type="text"
+          [(ngModel)]="mensajeChat"
+          name="mensajeChat"
+          placeholder="Escribe un mensaje..."
+          class="flex-1 px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500">
+
+        <button
+          type="submit"
+          class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+}

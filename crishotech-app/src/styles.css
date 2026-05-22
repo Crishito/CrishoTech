@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.bg-tech-gradient {
+  background: radial-gradient(circle at top right, #1e293b, #0f172a);
+}
+
+.hidden-section {
+  display: none;
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.chat-bubble-me {
+  align-self: flex-end;
+  background-color: #2563eb;
+  color: white;
+}
+
+.chat-bubble-them {
+  align-self: flex-start;
+  background-color: #f3f4f6;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+}
+
+.toast-enter {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

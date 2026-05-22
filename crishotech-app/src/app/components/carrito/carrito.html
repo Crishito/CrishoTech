@@ -1,0 +1,142 @@
+<!-- SECCIÓN PRINCIPAL DEL CARRITO -->
+<section class="pt-32 pb-20 bg-gray-50 min-h-screen">
+
+  <!-- CONTENEDOR CENTRAL -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+
+    <!-- ENCABEZADO -->
+    <div class="flex justify-between items-center mb-8">
+
+      <!-- TÍTULO -->
+      <h2 class="text-3xl font-bold text-blue-900">
+        Mi Carrito de Servicios
+      </h2>
+
+      <!-- BOTÓN PARA VOLVER AL INICIO -->
+      <button routerLink="/" class="text-blue-600 font-semibold flex items-center gap-2 hover:text-blue-800 transition">
+        <i class="fa-solid fa-arrow-left"></i>
+        Seguir pidiendo
+      </button>
+
+    </div>
+
+    <!-- CONTENEDOR DE LA TABLA -->
+    <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
+
+      <!-- TABLA -->
+      <table class="w-full text-left">
+
+        <!-- CABECERA DE LA TABLA -->
+        <thead class="bg-gray-100 border-b border-gray-200">
+          <tr>
+
+            <!-- COLUMNA DE SERVICIO -->
+            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
+              Servicio / Detalles
+            </th>
+
+            <!-- COLUMNA DE ACCIONES -->
+            <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-center">
+              Acciones
+            </th>
+
+          </tr>
+        </thead>
+
+        <!-- CUERPO DE LA TABLA -->
+        <tbody class="divide-y divide-gray-100">
+
+          <!-- RECORRER TODAS LAS SOLICITUDES -->
+          @for (item of solicitudes; track item.id) {
+
+            <!-- FILA DE CADA SERVICIO -->
+            <tr class="hover:bg-gray-50">
+
+              <!-- INFORMACIÓN DEL SERVICIO -->
+              <td class="px-6 py-4">
+
+                <!-- NOMBRE DEL SERVICIO -->
+                <div class="font-bold text-blue-800">
+                  {{ item.servicio }}
+                </div>
+
+                <!-- DESCRIPCIÓN -->
+                <div class="text-xs text-gray-500">
+                  {{ item.descripcion }}
+                </div>
+
+                <!-- DATOS DEL CLIENTE -->
+                <div class="text-xs text-gray-400 mt-1">
+                  Cliente: {{ item.nombre }} | Tel: {{ item.telefono }}
+                </div>
+
+              </td>
+
+              <!-- BOTÓN ELIMINAR -->
+              <td class="px-6 py-4 text-center">
+
+                <button
+                  (click)="eliminarSolicitud(item.id)"
+                  class="text-red-500 hover:underline text-sm font-bold">
+
+                  Quitar
+
+                </button>
+
+              </td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+      <!-- MENSAJE SI EL CARRITO ESTÁ VACÍO -->
+      @if (solicitudes.length === 0) {
+
+        <div class="p-12 text-center text-gray-400">
+
+          <!-- ÍCONO -->
+          <i class="fa-solid fa-cart-arrow-down text-5xl mb-4"></i>
+
+          <!-- MENSAJE -->
+          <p>No tienes solicitudes pendientes en tu carrito.</p>
+
+        </div>
+
+      }
+
+    </div>
+
+    <!-- BOTONES FINALES SI EXISTEN SOLICITUDES -->
+    @if (solicitudes.length > 0) {
+
+      <div class="mt-8 flex justify-end gap-4">
+
+        <!-- BOTÓN VACIAR CARRITO -->
+        <button
+          (click)="vaciarCarrito()"
+          class="px-8 py-3 rounded-xl text-red-600 font-bold border border-red-200 hover:bg-red-50 transition">
+
+          Vaciar Carrito
+
+        </button>
+
+        <!-- BOTÓN CONFIRMAR PEDIDO -->
+        <button
+          (click)="confirmarPedido()"
+          class="px-8 py-3 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">
+
+          Confirmar Pedido
+
+        </button>
+
+      </div>
+
+    }
+
+  </div>
+
+</section>
