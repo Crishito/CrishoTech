@@ -10,6 +10,12 @@ const cors = require('cors');
 // Importamos dotenv para usar las variables del archivo .env.
 require('dotenv').config();
 
+// Importamos las rutas de solicitudes.
+const solicitudRoutes = require('./routes/solicitud.routes');
+
+// Importamos las rutas de usuarios.
+const usuarioRoutes = require('./routes/usuario.routes');
+
 // Creamos la aplicación de Express.
 const app = express();
 
@@ -21,12 +27,26 @@ app.use(cors());
 
 // Permitimos que Express entienda datos en formato JSON.
 app.use(express.json());
-const solicitudRoutes = require('./routes/solicitud.routes');
-app.use('/api/solicitudes', solicitudRoutes);
 
 // Ruta inicial para comprobar que el backend funciona.
 app.get('/', (req, res) => {
   res.send('Backend de CrishoTech funcionando correctamente');
+});
+
+// Conectamos las rutas de solicitudes.
+app.use('/api/solicitudes', solicitudRoutes);
+
+// Conectamos las rutas de usuarios.
+app.use('/api/usuarios', usuarioRoutes);
+
+// Mensaje de prueba para saber si este server.js está cargando las rutas de usuarios.
+console.log('RUTA DE USUARIOS CARGADA');
+
+// Ruta de prueba directa para verificar usuarios.
+app.get('/api/prueba-usuarios', (req, res) => {
+  res.json({
+    mensaje: 'Ruta de usuarios funcionando'
+  });
 });
 
 // Conectamos con MongoDB.

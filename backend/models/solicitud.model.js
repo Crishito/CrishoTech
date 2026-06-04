@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 
-const mensajeSchema = new mongoose.Schema({
+const mensajeChatSchema = new mongoose.Schema({
   rol: {
     type: String,
+    enum: ['usuario', 'admin'],
     required: true
   },
   nombre: {
@@ -57,8 +58,13 @@ const solicitudSchema = new mongoose.Schema({
     default: Date.now
   },
   chat: {
-    type: [mensajeSchema],
+    type: [mensajeChatSchema],
     default: []
+  },
+
+  // Este campo permite relacionar la solicitud con el usuario logueado.
+  usuarioEmail: {
+    type: String
   }
 });
 
