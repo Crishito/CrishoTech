@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, NgFor, NgIf } from '@angular/common';
 import { Solicitud } from '../../models/solicitud';
 import { SolicitudService } from '../../services/solicitud.service';
 
 @Component({
   selector: 'app-panel-admin',
-  imports: [FormsModule, RouterLink, DatePipe],
+  imports: [FormsModule, RouterLink, DatePipe, NgFor, NgIf],
   templateUrl: './panel-admin.html',
   styleUrl: './panel-admin.css',
 })

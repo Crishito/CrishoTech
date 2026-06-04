@@ -10,14 +10,14 @@
       <!-- LOGO -->
       <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
 
-      <!-- Icono -->
-      <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
-        <img src="/img/logo.png" alt="Logo" class="h-10 w-auto">
-      </div>
+        <!-- Icono -->
+        <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
+          <img src="/img/logo.png" alt="Logo" class="h-10 w-auto">
+        </div>
 
         <!-- NOMBRE -->
         <span class="font-bold text-2xl tracking-tight">
-        <span class="text-orange-500">Crisho</span><span class="text-blue-400">Tech</span>
+          <span class="text-orange-500">Crisho</span><span class="text-blue-400">Tech</span>
         </span>
 
       </div>
@@ -106,8 +106,17 @@
         @if (authService.esAdmin()) {
 
           <!-- PANEL ADMIN -->
-          <button routerLink="/admin" class="text-gray-600 hover:text-blue-600 font-medium transition">
+          <button
+            routerLink="/admin"
+            class="text-gray-600 hover:text-blue-600 font-medium transition">
             Panel Técnico
+          </button>
+
+          <!-- CREAR USUARIO O ADMIN -->
+          <button
+            routerLink="/registro"
+            class="text-gray-600 hover:text-blue-600 font-medium transition">
+            Crear Usuario
           </button>
 
           <!-- ETIQUETA ADMIN -->

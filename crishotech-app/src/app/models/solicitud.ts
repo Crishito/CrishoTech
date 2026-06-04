@@ -18,4 +18,7 @@ export interface Solicitud {
   estado: string;
   fecha?: string;
   chat?: MensajeChat[];
+
+  // Correo del usuario que creó la solicitud.
+  usuarioEmail?: string;
 }

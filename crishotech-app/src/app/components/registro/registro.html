@@ -90,6 +90,34 @@
           }
         </div>
 
+        @if (authService.esAdmin()) {
+          <div>
+            <label class="block text-sm font-medium text-gray-700">
+              Tipo de cuenta
+            </label>
+
+            <select
+              [(ngModel)]="rol"
+              name="rol"
+              class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
+
+              <option value="usuario">Usuario / Cliente</option>
+              <option value="admin">Administrador</option>
+
+            </select>
+
+            <p class="text-xs text-gray-500 mt-1">
+              Esta opción solo aparece cuando un administrador está logueado.
+            </p>
+          </div>
+        }
+
+        @if (errorGeneral) {
+          <p class="text-red-500 text-sm text-center font-semibold">
+            {{ errorGeneral }}
+          </p>
+        }
+
         <button
           type="submit"
           class="w-full bg-blue-600 py-4 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition">

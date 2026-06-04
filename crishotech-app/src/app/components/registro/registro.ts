@@ -16,13 +16,17 @@ export class Registro {
   email: string = '';
   password: string = '';
 
+  // Por defecto, toda cuenta creada desde el registro será usuario.
+  rol: 'usuario' | 'admin' = 'usuario';
+
   errorNombre: string = '';
   errorApellido: string = '';
   errorEmail: string = '';
   errorPassword: string = '';
+  errorGeneral: string = '';
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router
   ) {}
 
@@ -40,6 +44,7 @@ export class Registro {
     this.errorApellido = '';
     this.errorEmail = '';
     this.errorPassword = '';
+    this.errorGeneral = '';
 
     let hayError = false;
 
@@ -82,25 +87,80 @@ export class Registro {
       return;
     }
 
-    const registrado = this.authService.registrar({
+    // Si no hay admin logueado, siempre se registra como usuario normal.
+    const rolFinal: 'usuario' | 'admin' = this.authService.esAdmin() ? this.rol : 'usuario';
+
+    this.authService.registrar({
       nombre: this.nombre,
       apellido: this.apellido,
       email: this.email,
       password: this.password,
-      rol: 'usuario'
+      rol: rolFinal
+    }).subscribe({
+      next: () => {
+        alert('Cuenta creada correctamente.');
+
+        this.nombre = '';
+        this.apellido = '';
+        this.email = '';
+        this.password = '';
+        this.rol = 'usuario';
+
+        if (this.authService.esAdmin()) {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/login']);
+        }
+      },
+      error: (error) => {
+        this.errorGeneral = error.error?.mensaje || 'Error al registrar usuario.';
+      }
     });
-
-    if (!registrado) {
-      this.errorEmail = 'Este correo ya está registrado.';
-      return;
-    }
-
-    alert('Cuenta creada correctamente. Ahora inicia sesión.');
-    this.router.navigate(['/login']);
   }
 
-  validarNombreEnTiempoReal() {}
-  validarApellidoEnTiempoReal() {}
-  validarEmailEnTiempoReal() {}
-  validarPasswordEnTiempoReal() {}
+  validarNombreEnTiempoReal() {
+    const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+    if (this.nombre.length === 0) {
+      this.errorNombre = '';
+    } else if (!soloLetras.test(this.nombre)) {
+      this.errorNombre = 'El nombre debe contener solo letras.';
+    } else {
+      this.errorNombre = '';
+    }
+  }
+
+  validarApellidoEnTiempoReal() {
+    const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+
+    if (this.apellido.length === 0) {
+      this.errorApellido = '';
+    } else if (!soloLetras.test(this.apellido)) {
+      this.errorApellido = 'El apellido debe contener solo letras.';
+    } else {
+      this.errorApellido = '';
+    }
+  }
+
+  validarEmailEnTiempoReal() {
+    const correoValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (this.email.length === 0) {
+      this.errorEmail = '';
+    } else if (!correoValido.test(this.email)) {
+      this.errorEmail = 'El correo debe tener un formato correcto.';
+    } else {
+      this.errorEmail = '';
+    }
+  }
+
+  validarPasswordEnTiempoReal() {
+    if (this.password.length === 0) {
+      this.errorPassword = '';
+    } else if (this.password.length < 8) {
+      this.errorPassword = 'La contraseña debe tener mínimo 8 caracteres.';
+    } else {
+      this.errorPassword = '';
+    }
+  }
 }

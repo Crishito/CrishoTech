@@ -171,104 +171,102 @@
 
           <tbody class="divide-y divide-gray-100">
 
-            @for (item of solicitudes; track item._id) {
-              <tr class="hover:bg-blue-50/30 transition">
+            <tr
+              *ngFor="let item of solicitudes"
+              class="hover:bg-blue-50/30 transition">
 
-                <td class="px-6 py-4">
-                  <div class="text-sm font-bold text-gray-900">
-                    {{ item.nombre }}
-                  </div>
+              <td class="px-6 py-4">
+                <div class="text-sm font-bold text-gray-900">
+                  {{ item.nombre }}
+                </div>
 
-                  <div class="text-[11px] text-gray-500">
-                    C.I: {{ item.cedula }}
-                  </div>
-                </td>
+                <div class="text-[11px] text-gray-500">
+                  C.I: {{ item.cedula }}
+                </div>
+              </td>
 
-                <td class="px-6 py-4">
-                  <div class="font-bold text-blue-800 text-[12px]">
-                    {{ item.servicio }}
-                  </div>
+              <td class="px-6 py-4">
+                <div class="font-bold text-blue-800 text-[12px]">
+                  {{ item.servicio }}
+                </div>
 
-                  <div class="text-[11px] text-gray-600">
-                    {{ item.descripcion }}
-                  </div>
+                <div class="text-[11px] text-gray-600">
+                  {{ item.descripcion }}
+                </div>
 
-                  <div class="text-[10px] text-gray-400 mt-1">
-                    {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
-                  </div>
-                </td>
+                <div class="text-[10px] text-gray-400 mt-1">
+                  {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
+                </div>
+              </td>
 
-                <td class="px-6 py-4">
-                  <div class="text-[11px] text-gray-600">
-                    {{ item.telefono }}
-                  </div>
+              <td class="px-6 py-4">
+                <div class="text-[11px] text-gray-600">
+                  {{ item.telefono }}
+                </div>
 
-                  <div class="text-[11px] text-gray-600">
-                    {{ item.correo }}
-                  </div>
+                <div class="text-[11px] text-gray-600">
+                  {{ item.correo }}
+                </div>
 
-                  <div class="text-[11px] text-gray-400">
-                    {{ item.direccion }}
-                  </div>
-                </td>
+                <div class="text-[11px] text-gray-400">
+                  {{ item.direccion }}
+                </div>
+              </td>
 
-                <td class="px-6 py-4">
-                  <select
-                    [ngModel]="item.estado"
-                    (ngModelChange)="cambiarEstado(item._id, $event)"
-                    class="text-xs border rounded p-2 font-bold text-gray-700 bg-white">
-                    <option value="Recibido">Recibido</option>
-                    <option value="En Proceso">En Proceso</option>
-                    <option value="Completado">Completado</option>
-                  </select>
-                </td>
+              <td class="px-6 py-4">
+                <select
+                  [ngModel]="item.estado"
+                  (ngModelChange)="cambiarEstado(item._id, $event)"
+                  class="text-xs border rounded p-2 font-bold text-gray-700 bg-white">
+                  <option value="Recibido">Recibido</option>
+                  <option value="En Proceso">En Proceso</option>
+                  <option value="Completado">Completado</option>
+                </select>
+              </td>
 
-                <td class="px-6 py-4">
-                  <div class="flex gap-2 justify-center">
+              <td class="px-6 py-4">
+                <div class="flex gap-2 justify-center">
 
-                    <button
-                      (click)="verDetalle(item)"
-                      class="p-2 text-sky-600 hover:bg-sky-100 rounded-lg transition"
-                      title="Ver Detalles">
-                      <i class="fa-solid fa-eye"></i>
-                    </button>
+                  <button
+                    (click)="verDetalle(item)"
+                    class="p-2 text-sky-600 hover:bg-sky-100 rounded-lg transition"
+                    title="Ver Detalles">
+                    <i class="fa-solid fa-eye"></i>
+                  </button>
 
-                    <button
-                      (click)="abrirEditar(item)"
-                      class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition"
-                      title="Editar Solicitud">
-                      <i class="fa-solid fa-pen"></i>
-                    </button>
+                  <button
+                    (click)="abrirEditar(item)"
+                    class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition"
+                    title="Editar Solicitud">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
 
-                    <button
-                      (click)="abrirChat(item)"
-                      class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition"
-                      title="Chat de Soporte">
-                      <i class="fa-solid fa-comments"></i>
-                    </button>
+                  <button
+                    (click)="abrirChat(item)"
+                    class="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition"
+                    title="Chat de Soporte">
+                    <i class="fa-solid fa-comments"></i>
+                  </button>
 
-                    <button
-                      (click)="eliminarSolicitud(item._id)"
-                      class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition"
-                      title="Eliminar Definitivamente">
-                      <i class="fa-solid fa-trash"></i>
-                    </button>
+                  <button
+                    (click)="eliminarSolicitud(item._id)"
+                    class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition"
+                    title="Eliminar Definitivamente">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
 
-                  </div>
-                </td>
+                </div>
+              </td>
 
-              </tr>
-            }
+            </tr>
 
           </tbody>
         </table>
 
-        @if (solicitudes.length === 0) {
-          <div class="p-12 text-center text-gray-400">
-            <i class="fa-solid fa-clipboard-list text-5xl mb-4"></i>
-            <p>No existen solicitudes confirmadas todavía.</p>
-          </div>
-        }
+        <div *ngIf="solicitudes.length === 0" class="p-12 text-center text-gray-400">
+          <i class="fa-solid fa-clipboard-list text-5xl mb-4"></i>
+          <p>No existen solicitudes confirmadas todavía.</p>
+        </div>
 
       </div>
     </div>
@@ -277,337 +275,336 @@
 </section>
 
 <!-- MODAL VER DETALLES ADMIN -->
-@if (modalDetalleAbierto && solicitudSeleccionada) {
-  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
+<div
+  *ngIf="modalDetalleAbierto && solicitudSeleccionada"
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
 
-    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
+  <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
 
-      <div class="bg-sky-600 p-6 text-white flex justify-between items-center">
-        <h3 class="text-xl font-bold flex items-center gap-2">
-          <i class="fa-solid fa-address-card"></i>
-          Detalles de la Solicitud
-        </h3>
+    <div class="bg-sky-600 p-6 text-white flex justify-between items-center">
+      <h3 class="text-xl font-bold flex items-center gap-2">
+        <i class="fa-solid fa-address-card"></i>
+        Detalles de la Solicitud
+      </h3>
 
-        <button
-          (click)="cerrarDetalle()"
-          class="text-white/80 hover:text-white text-2xl">
-          &times;
-        </button>
-      </div>
+      <button
+        (click)="cerrarDetalle()"
+        class="text-white/80 hover:text-white text-2xl">
+        &times;
+      </button>
+    </div>
 
-      <div class="p-8 space-y-4 text-sm text-gray-700">
+    <div class="p-8 space-y-4 text-sm text-gray-700">
 
-        <p><strong>Cliente:</strong> <span>{{ solicitudSeleccionada.nombre }}</span></p>
-        <p><strong>Cédula/ID:</strong> <span>{{ solicitudSeleccionada.cedula }}</span></p>
-        <p><strong>Teléfono:</strong> <span>{{ solicitudSeleccionada.telefono }}</span></p>
-        <p><strong>Correo:</strong> <span>{{ solicitudSeleccionada.correo }}</span></p>
-        <p><strong>Dirección:</strong> <span>{{ solicitudSeleccionada.direccion }}</span></p>
+      <p><strong>Cliente:</strong> <span>{{ solicitudSeleccionada.nombre }}</span></p>
+      <p><strong>Cédula/ID:</strong> <span>{{ solicitudSeleccionada.cedula }}</span></p>
+      <p><strong>Teléfono:</strong> <span>{{ solicitudSeleccionada.telefono }}</span></p>
+      <p><strong>Correo:</strong> <span>{{ solicitudSeleccionada.correo }}</span></p>
+      <p><strong>Dirección:</strong> <span>{{ solicitudSeleccionada.direccion }}</span></p>
 
-        <hr>
+      <hr>
 
-        <p>
-          <strong>Servicio:</strong>
-          <span class="text-blue-600 font-bold">
-            {{ solicitudSeleccionada.servicio }}
-          </span>
-        </p>
+      <p>
+        <strong>Servicio:</strong>
+        <span class="text-blue-600 font-bold">
+          {{ solicitudSeleccionada.servicio }}
+        </span>
+      </p>
 
-        <p>
-          <strong>Descripción:</strong>
-          <span class="italic">
-            {{ solicitudSeleccionada.descripcion }}
-          </span>
-        </p>
+      <p>
+        <strong>Descripción:</strong>
+        <span class="italic">
+          {{ solicitudSeleccionada.descripcion }}
+        </span>
+      </p>
 
-        <p>
-          <strong>Estado Actual:</strong>
-          <span class="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded">
-            {{ solicitudSeleccionada.estado }}
-          </span>
-        </p>
+      <p>
+        <strong>Estado Actual:</strong>
+        <span class="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded">
+          {{ solicitudSeleccionada.estado }}
+        </span>
+      </p>
 
-        <p>
-          <strong>Fecha:</strong>
-          <span>{{ solicitudSeleccionada.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
-        </p>
-
-      </div>
-
-      <div class="p-4 border-t bg-gray-50 text-right">
-        <button
-          (click)="cerrarDetalle()"
-          class="bg-gray-500 text-white px-6 py-2 rounded-xl font-bold hover:bg-gray-600 transition">
-          Cerrar
-        </button>
-      </div>
+      <p>
+        <strong>Fecha:</strong>
+        <span>{{ solicitudSeleccionada.fecha | date:'dd/MM/yyyy HH:mm' }}</span>
+      </p>
 
     </div>
 
+    <div class="p-4 border-t bg-gray-50 text-right">
+      <button
+        (click)="cerrarDetalle()"
+        class="bg-gray-500 text-white px-6 py-2 rounded-xl font-bold hover:bg-gray-600 transition">
+        Cerrar
+      </button>
+    </div>
+
   </div>
-}
+
+</div>
 
 <!-- MODAL EDITAR SOLICITUD -->
-@if (modalEditarAbierto) {
-  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
+<div
+  *ngIf="modalEditarAbierto"
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
 
-    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
+  <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
 
-      <div class="bg-green-600 p-6 text-white flex justify-between items-center">
-        <h3 class="text-xl font-bold flex items-center gap-2">
-          <i class="fa-solid fa-pen"></i>
-          Editar Solicitud
-        </h3>
+    <div class="bg-green-600 p-6 text-white flex justify-between items-center">
+      <h3 class="text-xl font-bold flex items-center gap-2">
+        <i class="fa-solid fa-pen"></i>
+        Editar Solicitud
+      </h3>
 
-        <button
-          (click)="cerrarEditar()"
-          class="text-white/80 hover:text-white text-2xl">
-          &times;
-        </button>
-      </div>
-
-      <form class="p-8 space-y-4" (submit)="guardarEdicion($event)" novalidate>
-
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase">
-            Servicio
-          </label>
-
-          <input
-            type="text"
-            [(ngModel)]="solicitudEditando.servicio"
-            name="servicio"
-            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase">
-              Nombre Completo
-            </label>
-
-            <input
-              type="text"
-              [(ngModel)]="solicitudEditando.nombre"
-              name="nombre"
-              class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase">
-              Cédula / ID
-            </label>
-
-            <input
-              type="text"
-              maxlength="10"
-              [(ngModel)]="solicitudEditando.cedula"
-              name="cedula"
-              class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase">
-              Teléfono
-            </label>
-
-            <input
-              type="text"
-              maxlength="10"
-              [(ngModel)]="solicitudEditando.telefono"
-              name="telefono"
-              class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase">
-              Correo
-            </label>
-
-            <input
-              type="email"
-              [(ngModel)]="solicitudEditando.correo"
-              name="correo"
-              class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase">
-            Dirección
-          </label>
-
-          <input
-            type="text"
-            [(ngModel)]="solicitudEditando.direccion"
-            name="direccion"
-            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase">
-            Descripción del Requerimiento
-          </label>
-
-          <textarea
-            rows="3"
-            [(ngModel)]="solicitudEditando.descripcion"
-            name="descripcion"
-            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
-          </textarea>
-        </div>
-
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase">
-            Estado
-          </label>
-
-          <select
-            [(ngModel)]="solicitudEditando.estado"
-            name="estado"
-            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
-            <option value="Recibido">Recibido</option>
-            <option value="En Proceso">En Proceso</option>
-            <option value="Completado">Completado</option>
-          </select>
-        </div>
-
-        <div class="flex gap-3 pt-2">
-          <button
-            type="submit"
-            class="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition">
-            Guardar Cambios
-          </button>
-
-          <button
-            type="button"
-            (click)="cerrarEditar()"
-            class="px-6 py-3 rounded-xl bg-gray-400 text-white font-bold hover:bg-gray-500 transition">
-            Cancelar
-          </button>
-        </div>
-
-      </form>
-
+      <button
+        (click)="cerrarEditar()"
+        class="text-white/80 hover:text-white text-2xl">
+        &times;
+      </button>
     </div>
 
-  </div>
-}
+    <form class="p-8 space-y-4" (submit)="guardarEdicion($event)" novalidate>
 
-<!-- MODAL CHAT / SEGUIMIENTO -->
-@if (modalChatAbierto && solicitudSeleccionada) {
-  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
-
-    <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-
-      <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
-        <h3 class="text-xl font-bold flex items-center gap-2">
-          <i class="fa-solid fa-comment-dots"></i>
-          Seguimiento del Requerimiento
-        </h3>
-
-        <button
-          (click)="cerrarChat()"
-          class="text-white hover:text-gray-300 text-2xl">
-          &times;
-        </button>
-      </div>
-
-      <div class="p-6 overflow-y-auto space-y-6 flex-1">
-
-        <div class="grid grid-cols-2 gap-4 bg-blue-50 p-5 rounded-2xl border border-blue-100">
-
-          <div>
-            <p class="text-[10px] font-bold text-blue-400 uppercase">
-              Cliente
-            </p>
-
-            <p class="text-sm font-bold text-slate-800">
-              {{ solicitudSeleccionada.nombre }}
-            </p>
-          </div>
-
-          <div>
-            <p class="text-[10px] font-bold text-blue-400 uppercase">
-              Servicio solicitado
-            </p>
-
-            <p class="text-sm font-bold text-blue-600">
-              {{ solicitudSeleccionada.servicio }}
-            </p>
-          </div>
-
-          <div class="col-span-2">
-            <p class="text-[10px] font-bold text-blue-400 uppercase">
-              Descripción original
-            </p>
-
-            <p class="text-sm text-slate-600 italic">
-              {{ solicitudSeleccionada.descripcion }}
-            </p>
-          </div>
-
-        </div>
-
-        <div class="space-y-4">
-          <h4 class="font-bold text-slate-800 border-b pb-2">
-            Mensajes de Soporte
-          </h4>
-
-          <div class="space-y-3 flex flex-col min-h-[150px] max-h-[300px] overflow-y-auto">
-
-            @if (!solicitudSeleccionada.chat || solicitudSeleccionada.chat.length === 0) {
-              <p class="text-xs text-center text-gray-400 mt-4 italic">
-                No hay mensajes aún.
-              </p>
-            }
-
-            @for (msg of solicitudSeleccionada.chat || []; track msg.fecha) {
-              <div
-                class="max-w-[80%] p-3 rounded-2xl text-xs shadow-sm"
-                [class.chat-bubble-me]="msg.rol === 'admin'"
-                [class.chat-bubble-them]="msg.rol === 'usuario'">
-
-                <p class="font-bold mb-1 text-[10px] opacity-75">
-                  {{ msg.nombre }}
-                </p>
-
-                <p>
-                  {{ msg.mensaje }}
-                </p>
-
-                <p class="text-[9px] opacity-60 mt-1">
-                  {{ msg.fecha | date:'dd/MM/yyyy HH:mm' }}
-                </p>
-              </div>
-            }
-
-          </div>
-        </div>
-
-      </div>
-
-      <form
-        class="p-4 border-t bg-gray-50 flex gap-2"
-        (submit)="enviarMensajeChat($event)">
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase">
+          Servicio
+        </label>
 
         <input
           type="text"
-          [(ngModel)]="mensajeChat"
-          name="mensajeChat"
-          placeholder="Escribe un mensaje..."
-          class="flex-1 px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500">
+          [(ngModel)]="solicitudEditando.servicio"
+          name="servicio"
+          class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
+      </div>
 
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase">
+            Nombre Completo
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="solicitudEditando.nombre"
+            name="nombre"
+            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase">
+            Cédula / ID
+          </label>
+
+          <input
+            type="text"
+            maxlength="10"
+            [(ngModel)]="solicitudEditando.cedula"
+            name="cedula"
+            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase">
+            Teléfono
+          </label>
+
+          <input
+            type="text"
+            maxlength="10"
+            [(ngModel)]="solicitudEditando.telefono"
+            name="telefono"
+            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase">
+            Correo
+          </label>
+
+          <input
+            type="email"
+            [(ngModel)]="solicitudEditando.correo"
+            name="correo"
+            class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase">
+          Dirección
+        </label>
+
+        <input
+          type="text"
+          [(ngModel)]="solicitudEditando.direccion"
+          name="direccion"
+          class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase">
+          Descripción del Requerimiento
+        </label>
+
+        <textarea
+          rows="3"
+          [(ngModel)]="solicitudEditando.descripcion"
+          name="descripcion"
+          class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
+        </textarea>
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-gray-500 uppercase">
+          Estado
+        </label>
+
+        <select
+          [(ngModel)]="solicitudEditando.estado"
+          name="estado"
+          class="w-full mt-1 px-4 py-2 bg-gray-50 border rounded-xl outline-none focus:ring-2 focus:ring-green-400">
+          <option value="Recibido">Recibido</option>
+          <option value="En Proceso">En Proceso</option>
+          <option value="Completado">Completado</option>
+        </select>
+      </div>
+
+      <div class="flex gap-3 pt-2">
         <button
           type="submit"
-          class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700">
-          <i class="fa-solid fa-paper-plane"></i>
+          class="flex-1 bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition">
+          Guardar Cambios
         </button>
 
-      </form>
+        <button
+          type="button"
+          (click)="cerrarEditar()"
+          class="px-6 py-3 rounded-xl bg-gray-400 text-white font-bold hover:bg-gray-500 transition">
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- MODAL CHAT / SEGUIMIENTO -->
+<div
+  *ngIf="modalChatAbierto && solicitudSeleccionada"
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
+
+  <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+
+    <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
+      <h3 class="text-xl font-bold flex items-center gap-2">
+        <i class="fa-solid fa-comment-dots"></i>
+        Seguimiento del Requerimiento
+      </h3>
+
+      <button
+        (click)="cerrarChat()"
+        class="text-white hover:text-gray-300 text-2xl">
+        &times;
+      </button>
+    </div>
+
+    <div class="p-6 overflow-y-auto space-y-6 flex-1">
+
+      <div class="grid grid-cols-2 gap-4 bg-blue-50 p-5 rounded-2xl border border-blue-100">
+
+        <div>
+          <p class="text-[10px] font-bold text-blue-400 uppercase">
+            Cliente
+          </p>
+
+          <p class="text-sm font-bold text-slate-800">
+            {{ solicitudSeleccionada.nombre }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[10px] font-bold text-blue-400 uppercase">
+            Servicio solicitado
+          </p>
+
+          <p class="text-sm font-bold text-blue-600">
+            {{ solicitudSeleccionada.servicio }}
+          </p>
+        </div>
+
+        <div class="col-span-2">
+          <p class="text-[10px] font-bold text-blue-400 uppercase">
+            Descripción original
+          </p>
+
+          <p class="text-sm text-slate-600 italic">
+            {{ solicitudSeleccionada.descripcion }}
+          </p>
+        </div>
+
+      </div>
+
+      <div class="space-y-4">
+        <h4 class="font-bold text-slate-800 border-b pb-2">
+          Mensajes de Soporte
+        </h4>
+
+        <div class="space-y-3 flex flex-col min-h-[150px] max-h-[300px] overflow-y-auto">
+
+          <p
+            *ngIf="!solicitudSeleccionada.chat || solicitudSeleccionada.chat.length === 0"
+            class="text-xs text-center text-gray-400 mt-4 italic">
+            No hay mensajes aún.
+          </p>
+
+          <div
+            *ngFor="let msg of solicitudSeleccionada.chat || []"
+            class="max-w-[80%] p-3 rounded-2xl text-xs shadow-sm"
+            [class.chat-bubble-me]="msg.rol === 'admin'"
+            [class.chat-bubble-them]="msg.rol === 'usuario'">
+
+            <p class="font-bold mb-1 text-[10px] opacity-75">
+              {{ msg.nombre }}
+            </p>
+
+            <p>
+              {{ msg.mensaje }}
+            </p>
+
+            <p class="text-[9px] opacity-60 mt-1">
+              {{ msg.fecha | date:'dd/MM/yyyy HH:mm' }}
+            </p>
+          </div>
+
+        </div>
+      </div>
 
     </div>
 
+    <form
+      class="p-4 border-t bg-gray-50 flex gap-2"
+      (submit)="enviarMensajeChat($event)">
+
+      <input
+        type="text"
+        [(ngModel)]="mensajeChat"
+        name="mensajeChat"
+        placeholder="Escribe un mensaje..."
+        class="flex-1 px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500">
+
+      <button
+        type="submit"
+        class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+
+    </form>
+
   </div>
-}
+
+</div>

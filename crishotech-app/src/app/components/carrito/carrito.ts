@@ -10,6 +10,9 @@ import { Solicitud } from '../../models/solicitud';
 // IMPORTA EL SERVICIO DE SOLICITUDES
 import { SolicitudService } from '../../services/solicitud.service';
 
+// IMPORTA EL SERVICIO DE AUTENTICACIÓN
+import { AuthService } from '../../services/auth.service';
+
 // DECORADOR DEL COMPONENTE
 @Component({
 
@@ -34,10 +37,11 @@ export class Carrito {
   solicitudes: Solicitud[] = [];
 
   // CONSTRUCTOR DEL COMPONENTE
-  // INYECTA EL SERVICIO Y EL ROUTER
+  // INYECTA EL SERVICIO, EL ROUTER Y EL SERVICIO DE AUTENTICACIÓN
   constructor(
 
     private solicitudService: SolicitudService,
+    private authService: AuthService,
     private router: Router
 
   ) {
@@ -87,6 +91,21 @@ export class Carrito {
 
   // MÉTODO PARA CONFIRMAR EL PEDIDO
   confirmarPedido() {
+
+    // OBTIENE EL USUARIO QUE INICIÓ SESIÓN
+    const usuarioActual = this.authService.usuarioActual();
+
+    // SI NO HAY USUARIO LOGUEADO, NO PERMITE CONFIRMAR
+    if (!usuarioActual) {
+      alert('Debes iniciar sesión para confirmar el pedido.');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    // ASIGNA EL CORREO DEL USUARIO LOGUEADO A CADA SOLICITUD
+    this.solicitudes.forEach((solicitud) => {
+      solicitud.usuarioEmail = usuarioActual.email;
+    });
 
     // MUESTRA EN CONSOLA LAS SOLICITUDES A GUARDAR
     console.log('Solicitudes que se van a guardar:', this.solicitudes);

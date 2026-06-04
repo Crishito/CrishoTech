@@ -79,20 +79,20 @@ export class Login {
       return;
     }
 
-    const loginCorrecto = this.authService.login(this.email, this.password);
+    this.authService.login(this.email, this.password).subscribe({
+      next: () => {
+        alert('Inicio de sesión correcto.');
 
-    if (!loginCorrecto) {
-      this.errorGeneral = 'Correo o contraseña incorrectos.';
-      return;
-    }
-
-    alert('Inicio de sesión correcto.');
-
-    if (this.authService.esAdmin()) {
-      this.router.navigate(['/admin']);
-    } else {
-      this.router.navigate(['/historial']);
-    }
+        if (this.authService.esAdmin()) {
+          this.router.navigate(['/admin']);
+        } else {
+          this.router.navigate(['/historial']);
+        }
+      },
+      error: (error) => {
+        this.errorGeneral = error.error?.mensaje || 'Correo o contraseña incorrectos.';
+      }
+    });
   }
 
 }

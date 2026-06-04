@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
+
 import { Solicitud } from '../../models/solicitud';
 import { SolicitudService } from '../../services/solicitud.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-historial',
@@ -19,14 +21,27 @@ export class Historial {
   modalChatAbierto: boolean = false;
   mensajeChat: string = '';
 
-  constructor(private solicitudService: SolicitudService) {
+  constructor(
+    private solicitudService: SolicitudService,
+    private authService: AuthService
+  ) {
     this.cargarHistorial();
   }
 
   cargarHistorial() {
+    const usuarioActual = this.authService.usuarioActual();
+
+    if (!usuarioActual) {
+      this.solicitudes = [];
+      return;
+    }
+
     this.solicitudService.obtenerSolicitudesMongo().subscribe({
       next: (datos) => {
-        this.solicitudes = datos;
+
+        // SOLO MUESTRA LAS SOLICITUDES DEL USUARIO LOGUEADO
+        this.solicitudes = datos.filter(item => item.usuarioEmail === usuarioActual.email);
+
       },
       error: () => {
         alert('Error al cargar el historial desde MongoDB.');
@@ -73,12 +88,20 @@ export class Historial {
     this.solicitudService.actualizarSolicitudMongo(this.solicitudSeleccionada._id, solicitudActualizada).subscribe({
       next: () => {
         const idSolicitud = this.solicitudSeleccionada?._id;
+        const usuarioActual = this.authService.usuarioActual();
 
         this.mensajeChat = '';
 
         this.solicitudService.obtenerSolicitudesMongo().subscribe({
           next: (datos) => {
-            this.solicitudes = datos;
+
+            if (!usuarioActual) {
+              this.solicitudes = [];
+              return;
+            }
+
+            // VUELVE A FILTRAR PARA QUE SOLO SE MUESTREN LAS SOLICITUDES DEL USUARIO ACTUAL
+            this.solicitudes = datos.filter(item => item.usuarioEmail === usuarioActual.email);
 
             const solicitudActual = this.solicitudes.find(item => item._id === idSolicitud);
 
