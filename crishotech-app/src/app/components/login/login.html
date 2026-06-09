@@ -31,6 +31,21 @@
           Iniciar Sesión
         </h2>
 
+        <!-- MENSAJE DE ÉXITO -->
+        @if (mensajeExito) {
+          <div class="bg-green-50 border border-green-300 text-green-700 text-sm p-3 rounded-xl text-center font-semibold">
+            {{ mensajeExito }}
+          </div>
+        }
+
+        <!-- MENSAJE DE ERROR GENERAL -->
+        @if (errorGeneral) {
+          <div class="bg-red-50 border border-red-300 text-red-600 text-sm p-3 rounded-xl text-center font-semibold">
+            {{ errorGeneral }}
+          </div>
+        }
+
+        <!-- CAMPO EMAIL -->
         <div class="relative">
           <label class="block text-sm font-medium text-gray-700">
             Email
@@ -41,6 +56,7 @@
             [(ngModel)]="email"
             name="email"
             (input)="validarEmailEnTiempoReal()"
+            placeholder="ejemplo@correo.com"
             class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
           @if (errorEmail) {
@@ -50,6 +66,7 @@
           }
         </div>
 
+        <!-- CAMPO CONTRASEÑA -->
         <div class="relative">
           <label class="block text-sm font-medium text-gray-700">
             Contraseña
@@ -60,6 +77,7 @@
             [(ngModel)]="password"
             name="password"
             (keyup)="validarPasswordEnTiempoReal()"
+            placeholder="Ingrese su contraseña"
             class="w-full mt-1 px-4 py-3 rounded-xl border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none">
 
           @if (errorPassword) {
@@ -68,12 +86,6 @@
             </p>
           }
         </div>
-
-        @if (errorGeneral) {
-          <p class="text-red-500 text-sm text-center font-semibold">
-            {{ errorGeneral }}
-          </p>
-        }
 
         <button
           type="submit"

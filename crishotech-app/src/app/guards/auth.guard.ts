@@ -10,8 +10,12 @@ export const usuarioGuard: CanActivateFn = () => {
     return true;
   }
 
-  alert('Debes iniciar sesión como cliente para acceder.');
-  router.navigate(['/login']);
+  router.navigate(['/login'], {
+    queryParams: {
+      mensaje: 'Debes iniciar sesión como cliente para acceder.'
+    }
+  });
+
   return false;
 };
 
@@ -23,7 +27,11 @@ export const adminGuard: CanActivateFn = () => {
     return true;
   }
 
-  alert('Solo el administrador puede acceder al panel técnico.');
-  router.navigate(['/login']);
+  router.navigate(['/login'], {
+    queryParams: {
+      mensaje: 'Solo el administrador puede acceder al panel técnico.'
+    }
+  });
+
   return false;
 };

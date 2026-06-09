@@ -25,6 +25,9 @@ export class Registro {
   errorPassword: string = '';
   errorGeneral: string = '';
 
+  // Mensaje verde para mostrar que la cuenta fue creada sin usar alert.
+  mensajeExito: string = '';
+
   constructor(
     public authService: AuthService,
     private router: Router
@@ -45,6 +48,7 @@ export class Registro {
     this.errorEmail = '';
     this.errorPassword = '';
     this.errorGeneral = '';
+    this.mensajeExito = '';
 
     let hayError = false;
 
@@ -98,7 +102,7 @@ export class Registro {
       rol: rolFinal
     }).subscribe({
       next: () => {
-        alert('Cuenta creada correctamente.');
+        this.mensajeExito = 'Cuenta creada correctamente.';
 
         this.nombre = '';
         this.apellido = '';
@@ -106,11 +110,13 @@ export class Registro {
         this.password = '';
         this.rol = 'usuario';
 
-        if (this.authService.esAdmin()) {
-          this.router.navigate(['/admin']);
-        } else {
-          this.router.navigate(['/login']);
-        }
+        setTimeout(() => {
+          if (this.authService.esAdmin()) {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/login']);
+          }
+        }, 900);
       },
       error: (error) => {
         this.errorGeneral = error.error?.mensaje || 'Error al registrar usuario.';

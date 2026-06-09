@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { SolicitudService } from '../../services/solicitud.service';
 import { Solicitud } from '../../models/solicitud';
 import { AuthService } from '../../services/auth.service';
@@ -14,13 +15,17 @@ import { AuthService } from '../../services/auth.service';
 export class Servicios {
 
   constructor(
-  private solicitudService: SolicitudService,
-  private authService: AuthService,
-  private router: Router
-) {}
+    private solicitudService: SolicitudService,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   modalAbierto = false;
   servicioSeleccionado = '';
+
+  mensajeExitoSolicitud = '';
+  mensajeErrorSolicitud = '';
+  mensajeAvisoPagina = '';
 
   solicitud = {
     nombre: '',
@@ -71,33 +76,42 @@ export class Servicios {
       imagen: '/img/seguridad.jpg',
       descripcion: 'Aceleración del sistema, eliminación de virus y malware, y configuración de actualizaciones para un rendimiento óptimo.'
     }
-    /*{
-      nombre: 'Venta de Componentes',
-      icono: 'fa-solid fa-microchip text-blue-600 text-2xl group-hover:text-white',
-      imagen: '/img/venta-componentes.jpg',
-      descripcion: 'Ofrecemos componentes de hardware de alta calidad para actualización y ensamblaje de computadoras, con asesoría personalizada.'
-    }*/
   ];
 
   abrirModal(nombreServicio: string) {
-  if (!this.authService.estaLogueado()) {
-    alert('Debes iniciar sesión para solicitar un servicio.');
-    this.router.navigate(['/login']);
-    return;
-  }
+    this.mensajeAvisoPagina = '';
+    this.mensajeExitoSolicitud = '';
+    this.mensajeErrorSolicitud = '';
 
-  if (this.authService.esAdmin()) {
-    alert('El administrador debe gestionar solicitudes desde el panel técnico.');
-    this.router.navigate(['/admin']);
-    return;
-  }
+    if (!this.authService.estaLogueado()) {
+      this.mensajeAvisoPagina = 'Debes iniciar sesión para solicitar un servicio.';
 
-  this.servicioSeleccionado = nombreServicio;
-  this.modalAbierto = true;
-}
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 900);
+
+      return;
+    }
+
+    if (this.authService.esAdmin()) {
+      this.mensajeAvisoPagina = 'El administrador debe gestionar solicitudes desde el panel técnico.';
+
+      setTimeout(() => {
+        this.router.navigate(['/admin']);
+      }, 900);
+
+      return;
+    }
+
+    this.servicioSeleccionado = nombreServicio;
+    this.modalAbierto = true;
+  }
 
   cerrarModal() {
     this.modalAbierto = false;
+    this.mensajeExitoSolicitud = '';
+    this.mensajeErrorSolicitud = '';
+    this.limpiarErrores();
   }
 
   limpiarErrores() {
@@ -130,12 +144,19 @@ export class Servicios {
     }
   }
 
+  limpiarNombre() {
+    this.solicitud.nombre = this.solicitud.nombre.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
+    this.validarNombreEnTiempoReal();
+  }
+
   limpiarCedula() {
     this.solicitud.cedula = this.solicitud.cedula.replace(/\D/g, '');
+    this.validarCedulaEnTiempoReal();
   }
 
   limpiarTelefono() {
     this.solicitud.telefono = this.solicitud.telefono.replace(/\D/g, '');
+    this.validarTelefonoEnTiempoReal();
   }
 
   validarNombreEnTiempoReal() {
@@ -206,6 +227,8 @@ export class Servicios {
     event.preventDefault();
 
     this.limpiarErrores();
+    this.mensajeExitoSolicitud = '';
+    this.mensajeErrorSolicitud = '';
 
     let hayError = false;
 
@@ -215,7 +238,7 @@ export class Servicios {
     if (this.solicitud.nombre.trim() === '') {
       this.errores.nombre = 'Este campo es obligatorio.';
       hayError = true;
-    } else if (!soloLetras.test(this.solicitud.nombre)) {
+    } else if (!soloLetras.test(this.solicitud.nombre.trim())) {
       this.errores.nombre = 'El nombre debe contener solo letras.';
       hayError = true;
     }
@@ -239,7 +262,7 @@ export class Servicios {
     if (this.solicitud.correo.trim() === '') {
       this.errores.correo = 'Este campo es obligatorio.';
       hayError = true;
-    } else if (!correoValido.test(this.solicitud.correo)) {
+    } else if (!correoValido.test(this.solicitud.correo.trim())) {
       this.errores.correo = 'Ingrese un correo válido.';
       hayError = true;
     }
@@ -261,28 +284,29 @@ export class Servicios {
     }
 
     if (hayError) {
+      this.mensajeErrorSolicitud = 'Revisa los campos marcados antes de continuar.';
       return;
     }
 
-  const nuevaSolicitud: Solicitud = {
-    id: Date.now(),
-    servicio: this.servicioSeleccionado,
-    nombre: this.solicitud.nombre,
-    cedula: this.solicitud.cedula,
-    telefono: this.solicitud.telefono,
-    correo: this.solicitud.correo,
-    direccion: this.solicitud.direccion,
-    descripcion: this.solicitud.descripcion,
-    estado: 'Recibido',
-    fecha: new Date().toISOString()
-  };
+    const nuevaSolicitud: Solicitud = {
+      id: Date.now(),
+      servicio: this.servicioSeleccionado,
+      nombre: this.solicitud.nombre.trim(),
+      cedula: this.solicitud.cedula.trim(),
+      telefono: this.solicitud.telefono.trim(),
+      correo: this.solicitud.correo.trim().toLowerCase(),
+      direccion: this.solicitud.direccion.trim(),
+      descripcion: this.solicitud.descripcion.trim(),
+      estado: 'Recibido',
+      fecha: new Date().toISOString()
+    };
 
     this.solicitudService.agregarAlCarrito(nuevaSolicitud);
 
     console.log('Solicitud agregada al carrito:', nuevaSolicitud);
     console.log('Carrito después de agregar:', this.solicitudService.obtenerCarrito());
 
-    alert('Servicio añadido al carrito.');
+    this.mensajeExitoSolicitud = 'Servicio añadido al carrito correctamente.';
 
     this.solicitud = {
       nombre: '',
@@ -293,7 +317,9 @@ export class Servicios {
       descripcion: ''
     };
 
-    this.cerrarModal();
+    setTimeout(() => {
+      this.cerrarModal();
+    }, 900);
   }
 
 }

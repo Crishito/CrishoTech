@@ -1,161 +1,157 @@
-// IMPORTA EL DECORADOR COMPONENT DE ANGULAR
+// Importa el decorador Component de Angular.
 import { Component } from '@angular/core';
 
-// IMPORTA EL ROUTER Y ROUTERLINK PARA NAVEGACIÓN
+// Importa Router para redireccionar y RouterLink para usar enlaces en el HTML.
 import { Router, RouterLink } from '@angular/router';
 
-// IMPORTA EL MODELO DE SOLICITUD
+// Importa el modelo Solicitud.
 import { Solicitud } from '../../models/solicitud';
 
-// IMPORTA EL SERVICIO DE SOLICITUDES
+// Importa el servicio que maneja el carrito y las solicitudes.
 import { SolicitudService } from '../../services/solicitud.service';
 
-// IMPORTA EL SERVICIO DE AUTENTICACIÓN
+// Importa el servicio de autenticación para saber qué usuario está logueado.
 import { AuthService } from '../../services/auth.service';
 
-// DECORADOR DEL COMPONENTE
 @Component({
-
-  // NOMBRE DEL SELECTOR HTML
   selector: 'app-carrito',
-
-  // IMPORTACIONES NECESARIAS PARA EL COMPONENTE
   imports: [RouterLink],
-
-  // ARCHIVO HTML DEL COMPONENTE
   templateUrl: './carrito.html',
-
-  // ARCHIVO CSS DEL COMPONENTE
   styleUrl: './carrito.css',
-
 })
-
-// CLASE PRINCIPAL DEL COMPONENTE
 export class Carrito {
 
-  // AQUÍ SE GUARDAN LAS SOLICITUDES TEMPORALES DEL CARRITO
+  // Aquí se guardan las solicitudes temporales del carrito.
   solicitudes: Solicitud[] = [];
 
-  // CONSTRUCTOR DEL COMPONENTE
-  // INYECTA EL SERVICIO, EL ROUTER Y EL SERVICIO DE AUTENTICACIÓN
-  constructor(
+  // Mensaje verde para mostrar acciones exitosas sin usar alert.
+  mensajeExitoCarrito: string = '';
 
+  // Mensaje rojo para mostrar errores sin usar alert.
+  mensajeErrorCarrito: string = '';
+
+  // Mensaje amarillo para avisos importantes.
+  mensajeAvisoCarrito: string = '';
+
+  constructor(
     private solicitudService: SolicitudService,
     private authService: AuthService,
     private router: Router
-
   ) {
-
-    // CARGA EL CARRITO AL INICIAR EL COMPONENTE
     this.cargarCarrito();
-
   }
 
-  // MÉTODO PARA CARGAR LAS SOLICITUDES DEL CARRITO
-  cargarCarrito() {
+  // Limpia todos los mensajes visuales del carrito.
+  limpiarMensajes() {
+    this.mensajeExitoCarrito = '';
+    this.mensajeErrorCarrito = '';
+    this.mensajeAvisoCarrito = '';
+  }
 
-    // OBTIENE LAS SOLICITUDES DESDE EL SERVICIO
+  // Carga las solicitudes guardadas temporalmente en el carrito.
+  cargarCarrito() {
     this.solicitudes = this.solicitudService.obtenerCarrito();
 
-    // MUESTRA EN CONSOLA EL CONTENIDO DEL CARRITO
     console.log('Carrito cargado:', this.solicitudes);
-
   }
 
-  // MÉTODO PARA ELIMINAR UNA SOLICITUD DEL CARRITO
+  // Elimina una sola solicitud del carrito.
   eliminarSolicitud(id: number | undefined) {
+    this.limpiarMensajes();
 
-    // VERIFICA QUE EL ID EXISTA
     if (!id) {
+      this.mensajeErrorCarrito = 'No se pudo identificar la solicitud seleccionada.';
       return;
     }
 
-    // ELIMINA LA SOLICITUD DEL CARRITO
     this.solicitudService.eliminarDelCarrito(id);
-
-    // RECARGA EL CARRITO
     this.cargarCarrito();
 
+    this.mensajeExitoCarrito = 'Solicitud quitada del carrito correctamente.';
   }
 
-  // MÉTODO PARA VACIAR TODO EL CARRITO
+  // Vacía todas las solicitudes del carrito.
   vaciarCarrito() {
+    this.limpiarMensajes();
 
-    // ELIMINA TODAS LAS SOLICITUDES
+    if (this.solicitudes.length === 0) {
+      this.mensajeAvisoCarrito = 'El carrito ya está vacío.';
+      return;
+    }
+
     this.solicitudService.vaciarCarrito();
-
-    // RECARGA EL CARRITO
     this.cargarCarrito();
 
+    this.mensajeExitoCarrito = 'Carrito vaciado correctamente.';
   }
 
-  // MÉTODO PARA CONFIRMAR EL PEDIDO
+  // Confirma el pedido y guarda las solicitudes en MongoDB.
   confirmarPedido() {
+    this.limpiarMensajes();
 
-    // OBTIENE EL USUARIO QUE INICIÓ SESIÓN
     const usuarioActual = this.authService.usuarioActual();
 
-    // SI NO HAY USUARIO LOGUEADO, NO PERMITE CONFIRMAR
     if (!usuarioActual) {
-      alert('Debes iniciar sesión para confirmar el pedido.');
-      this.router.navigate(['/login']);
+      this.mensajeAvisoCarrito = 'Debes iniciar sesión para confirmar el pedido.';
+
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 900);
+
       return;
     }
 
-    // ASIGNA EL CORREO DEL USUARIO LOGUEADO A CADA SOLICITUD
+    if (this.solicitudes.length === 0) {
+      this.mensajeAvisoCarrito = 'No hay solicitudes para confirmar.';
+      return;
+    }
+
     this.solicitudes.forEach((solicitud) => {
       solicitud.usuarioEmail = usuarioActual.email;
     });
 
-    // MUESTRA EN CONSOLA LAS SOLICITUDES A GUARDAR
     console.log('Solicitudes que se van a guardar:', this.solicitudes);
 
-    // CREA LAS PETICIONES HTTP PARA ENVIAR AL BACKEND
     const peticiones = this.solicitudService.confirmarPedido();
 
-    // MUESTRA CUÁNTAS PETICIONES SE GENERARON
     console.log('Cantidad de peticiones creadas:', peticiones.length);
 
-    // VERIFICA SI NO HAY SOLICITUDES
     if (peticiones.length === 0) {
-
-      alert('No hay solicitudes para confirmar.');
+      this.mensajeAvisoCarrito = 'No hay solicitudes para confirmar.';
       return;
-
     }
 
-    // CONTADOR DE PETICIONES COMPLETADAS
     let completadas = 0;
+    let huboError = false;
 
-    // RECORRE CADA PETICIÓN
     peticiones.forEach((peticion) => {
-
-      // SE SUSCRIBE A LA PETICIÓN HTTP
       peticion.subscribe({
-
-        // SI LA PETICIÓN SALE CORRECTAMENTE
         next: (respuesta) => {
           console.log('Respuesta del backend:', respuesta);
+
           completadas++;
-          if (completadas === peticiones.length) {
+
+          if (completadas === peticiones.length && !huboError) {
             this.solicitudService.vaciarCarrito();
             this.cargarCarrito();
-            alert('Pedido confirmado y guardado en MongoDB.');
-            this.router.navigate(['/historial']);
-          }
 
+            this.mensajeExitoCarrito = 'Pedido confirmado y guardado correctamente.';
+
+            setTimeout(() => {
+              this.router.navigate(['/historial']);
+            }, 1000);
+          }
         },
         error: (error) => {
           console.error('Error al guardar en MongoDB:', error);
-          
-          alert('Error al guardar una solicitud en MongoDB. Revisa la consola.');
 
+          huboError = true;
+
+          this.mensajeErrorCarrito =
+            error.error?.mensaje || 'Error al guardar una solicitud en MongoDB. Revisa la consola.';
         }
-
       });
-
     });
-
   }
 
 }

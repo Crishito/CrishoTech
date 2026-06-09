@@ -37,6 +37,50 @@ export class PanelAdmin {
 
   private logoExcelUrl = '/img/logo.png';
 
+  mensajeExitoPanel: string = '';
+  mensajeErrorPanel: string = '';
+
+  mensajeRegistroManual: string = '';
+
+  modalConfirmacionAbierto: boolean = false;
+  tituloConfirmacion: string = '';
+  mensajeConfirmacion: string = '';
+  tipoConfirmacion: 'solicitud' | 'usuario' | '' = '';
+  idConfirmacion: string | undefined = undefined;
+
+  erroresRegistroManual = {
+    servicio: '',
+    nombre: '',
+    cedula: '',
+    telefono: '',
+    correo: '',
+    direccion: '',
+    descripcion: '',
+    general: ''
+  };
+
+  erroresSolicitudEditando = {
+    servicio: '',
+    nombre: '',
+    cedula: '',
+    telefono: '',
+    correo: '',
+    direccion: '',
+    descripcion: '',
+    estado: '',
+    general: ''
+  };
+
+  erroresUsuarioEditando = {
+    nombre: '',
+    apellido: '',
+    email: '',
+    rol: '',
+    general: ''
+  };
+
+  errorChat: string = '';
+
   registroManual = {
     servicio: 'Mantenimiento / Registro Manual',
     nombre: '',
@@ -75,13 +119,87 @@ export class PanelAdmin {
     this.cargarUsuarios();
   }
 
+  private limpiarMensajesGenerales() {
+    this.mensajeExitoPanel = '';
+    this.mensajeErrorPanel = '';
+  }
+
+  private limpiarErroresRegistroManual() {
+    this.erroresRegistroManual = {
+      servicio: '',
+      nombre: '',
+      cedula: '',
+      telefono: '',
+      correo: '',
+      direccion: '',
+      descripcion: '',
+      general: ''
+    };
+
+    this.mensajeRegistroManual = '';
+  }
+
+  private limpiarErroresSolicitudEditando() {
+    this.erroresSolicitudEditando = {
+      servicio: '',
+      nombre: '',
+      cedula: '',
+      telefono: '',
+      correo: '',
+      direccion: '',
+      descripcion: '',
+      estado: '',
+      general: ''
+    };
+  }
+
+  private limpiarErroresUsuarioEditando() {
+    this.erroresUsuarioEditando = {
+      nombre: '',
+      apellido: '',
+      email: '',
+      rol: '',
+      general: ''
+    };
+  }
+
+  private correoValido(correo: string): boolean {
+    const expresion = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return expresion.test(correo);
+  }
+
+  private soloLetras(texto: string): boolean {
+    const expresion = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
+    return expresion.test(texto);
+  }
+
+  limpiarNombreRegistroManual() {
+    this.registroManual.nombre = this.registroManual.nombre.replace(/[^a-zA-ZÁÉÍÓÚáéíóúÑñ\s]/g, '');
+    this.erroresRegistroManual.nombre = '';
+  }
+
+  limpiarNombreSolicitudEditando() {
+    this.solicitudEditando.nombre = this.solicitudEditando.nombre.replace(/[^a-zA-ZÁÉÍÓÚáéíóúÑñ\s]/g, '');
+    this.erroresSolicitudEditando.nombre = '';
+  }
+
+  limpiarNombreUsuarioEditando() {
+    this.usuarioEditando.nombre = this.usuarioEditando.nombre.replace(/[^a-zA-ZÁÉÍÓÚáéíóúÑñ\s]/g, '');
+    this.erroresUsuarioEditando.nombre = '';
+  }
+
+  limpiarApellidoUsuarioEditando() {
+    this.usuarioEditando.apellido = this.usuarioEditando.apellido?.replace(/[^a-zA-ZÁÉÍÓÚáéíóúÑñ\s]/g, '') || '';
+    this.erroresUsuarioEditando.apellido = '';
+  }
+
   cargarSolicitudes() {
     this.solicitudService.obtenerSolicitudesMongo().subscribe({
       next: (datos) => {
         this.solicitudes = datos;
       },
       error: () => {
-        alert('Error al cargar solicitudes desde MongoDB.');
+        this.mensajeErrorPanel = 'Error al cargar solicitudes desde MongoDB.';
       }
     });
   }
@@ -100,35 +218,82 @@ export class PanelAdmin {
         });
       },
       error: () => {
-        alert('Error al cargar usuarios desde MongoDB.');
+        this.mensajeErrorPanel = 'Error al cargar usuarios desde MongoDB.';
       }
     });
   }
 
+  validarRegistroManual(): boolean {
+    this.limpiarErroresRegistroManual();
+
+    let valido = true;
+
+    if (this.registroManual.nombre.trim() === '') {
+      this.erroresRegistroManual.nombre = 'El nombre completo es obligatorio.';
+      valido = false;
+    } else if (!this.soloLetras(this.registroManual.nombre.trim())) {
+      this.erroresRegistroManual.nombre = 'El nombre debe contener solo letras.';
+      valido = false;
+    }
+
+    if (this.registroManual.cedula.trim() === '') {
+      this.erroresRegistroManual.cedula = 'La cédula es obligatoria.';
+      valido = false;
+    } else if (!/^\d{10}$/.test(this.registroManual.cedula)) {
+      this.erroresRegistroManual.cedula = 'La cédula debe tener 10 números.';
+      valido = false;
+    }
+
+    if (this.registroManual.telefono.trim() === '') {
+      this.erroresRegistroManual.telefono = 'El teléfono es obligatorio.';
+      valido = false;
+    } else if (!/^\d{10}$/.test(this.registroManual.telefono)) {
+      this.erroresRegistroManual.telefono = 'El teléfono debe tener 10 números.';
+      valido = false;
+    }
+
+    if (this.registroManual.correo.trim() === '') {
+      this.erroresRegistroManual.correo = 'El correo es obligatorio.';
+      valido = false;
+    } else if (!this.correoValido(this.registroManual.correo)) {
+      this.erroresRegistroManual.correo = 'El correo debe tener un formato correcto.';
+      valido = false;
+    }
+
+    if (this.registroManual.direccion.trim() === '') {
+      this.erroresRegistroManual.direccion = 'La dirección es obligatoria.';
+      valido = false;
+    }
+
+    if (this.registroManual.servicio.trim() === '') {
+      this.erroresRegistroManual.servicio = 'El servicio es obligatorio.';
+      valido = false;
+    }
+
+    if (this.registroManual.descripcion.trim() === '') {
+      this.erroresRegistroManual.descripcion = 'La descripción es obligatoria.';
+      valido = false;
+    }
+
+    return valido;
+  }
+
   guardarRegistroManual(event: Event) {
     event.preventDefault();
+    this.limpiarMensajesGenerales();
 
-    if (
-      this.registroManual.servicio.trim() === '' ||
-      this.registroManual.nombre.trim() === '' ||
-      this.registroManual.cedula.trim() === '' ||
-      this.registroManual.telefono.trim() === '' ||
-      this.registroManual.correo.trim() === '' ||
-      this.registroManual.direccion.trim() === '' ||
-      this.registroManual.descripcion.trim() === ''
-    ) {
-      alert('Todos los campos del registro manual son obligatorios.');
+    if (!this.validarRegistroManual()) {
       return;
     }
 
     const nuevaSolicitud: Solicitud = {
-      servicio: this.registroManual.servicio,
-      nombre: this.registroManual.nombre,
-      cedula: this.registroManual.cedula,
-      telefono: this.registroManual.telefono,
-      correo: this.registroManual.correo,
-      direccion: this.registroManual.direccion,
-      descripcion: this.registroManual.descripcion,
+      servicio: this.registroManual.servicio.trim(),
+      nombre: this.registroManual.nombre.trim(),
+      cedula: this.registroManual.cedula.trim(),
+      telefono: this.registroManual.telefono.trim(),
+      correo: this.registroManual.correo.trim(),
+      direccion: this.registroManual.direccion.trim(),
+      descripcion: this.registroManual.descripcion.trim(),
       estado: this.registroManual.estado,
       fecha: new Date().toISOString(),
       chat: []
@@ -136,7 +301,7 @@ export class PanelAdmin {
 
     this.solicitudService.guardarSolicitudMongo(nuevaSolicitud).subscribe({
       next: () => {
-        alert('Registro manual creado correctamente.');
+        this.mensajeRegistroManual = 'Registro manual creado correctamente.';
 
         this.registroManual = {
           servicio: 'Mantenimiento / Registro Manual',
@@ -151,8 +316,9 @@ export class PanelAdmin {
 
         this.cargarSolicitudes();
       },
-      error: () => {
-        alert('Error al crear el registro manual.');
+      error: (error) => {
+        this.erroresRegistroManual.general =
+          error.error?.mensaje || 'Error al crear el registro manual.';
       }
     });
   }
@@ -169,6 +335,7 @@ export class PanelAdmin {
 
   abrirEditar(solicitud: Solicitud) {
     this.idEditando = solicitud._id;
+    this.limpiarErroresSolicitudEditando();
 
     this.solicitudEditando = {
       servicio: solicitud.servicio,
@@ -187,68 +354,125 @@ export class PanelAdmin {
   cerrarEditar() {
     this.modalEditarAbierto = false;
     this.idEditando = undefined;
+    this.limpiarErroresSolicitudEditando();
+  }
+
+  validarSolicitudEditando(): boolean {
+    this.limpiarErroresSolicitudEditando();
+
+    let valido = true;
+
+    if (this.solicitudEditando.servicio.trim() === '') {
+      this.erroresSolicitudEditando.servicio = 'El servicio es obligatorio.';
+      valido = false;
+    }
+
+    if (this.solicitudEditando.nombre.trim() === '') {
+      this.erroresSolicitudEditando.nombre = 'El nombre completo es obligatorio.';
+      valido = false;
+    } else if (!this.soloLetras(this.solicitudEditando.nombre.trim())) {
+      this.erroresSolicitudEditando.nombre = 'El nombre debe contener solo letras.';
+      valido = false;
+    }
+
+    if (this.solicitudEditando.cedula.trim() === '') {
+      this.erroresSolicitudEditando.cedula = 'La cédula es obligatoria.';
+      valido = false;
+    } else if (!/^\d{10}$/.test(this.solicitudEditando.cedula)) {
+      this.erroresSolicitudEditando.cedula = 'La cédula debe tener 10 números.';
+      valido = false;
+    }
+
+    if (this.solicitudEditando.telefono.trim() === '') {
+      this.erroresSolicitudEditando.telefono = 'El teléfono es obligatorio.';
+      valido = false;
+    } else if (!/^\d{10}$/.test(this.solicitudEditando.telefono)) {
+      this.erroresSolicitudEditando.telefono = 'El teléfono debe tener 10 números.';
+      valido = false;
+    }
+
+    if (this.solicitudEditando.correo.trim() === '') {
+      this.erroresSolicitudEditando.correo = 'El correo es obligatorio.';
+      valido = false;
+    } else if (!this.correoValido(this.solicitudEditando.correo)) {
+      this.erroresSolicitudEditando.correo = 'El correo debe tener un formato correcto.';
+      valido = false;
+    }
+
+    if (this.solicitudEditando.direccion.trim() === '') {
+      this.erroresSolicitudEditando.direccion = 'La dirección es obligatoria.';
+      valido = false;
+    }
+
+    if (this.solicitudEditando.descripcion.trim() === '') {
+      this.erroresSolicitudEditando.descripcion = 'La descripción es obligatoria.';
+      valido = false;
+    }
+
+    if (this.solicitudEditando.estado.trim() === '') {
+      this.erroresSolicitudEditando.estado = 'El estado es obligatorio.';
+      valido = false;
+    }
+
+    return valido;
   }
 
   guardarEdicion(event: Event) {
     event.preventDefault();
+    this.limpiarMensajesGenerales();
 
     if (!this.idEditando) {
       return;
     }
 
-    if (
-      this.solicitudEditando.servicio.trim() === '' ||
-      this.solicitudEditando.nombre.trim() === '' ||
-      this.solicitudEditando.cedula.trim() === '' ||
-      this.solicitudEditando.telefono.trim() === '' ||
-      this.solicitudEditando.correo.trim() === '' ||
-      this.solicitudEditando.direccion.trim() === '' ||
-      this.solicitudEditando.descripcion.trim() === '' ||
-      this.solicitudEditando.estado.trim() === ''
-    ) {
-      alert('Todos los campos son obligatorios.');
+    if (!this.validarSolicitudEditando()) {
       return;
     }
 
     this.solicitudService.actualizarSolicitudMongo(this.idEditando, this.solicitudEditando).subscribe({
       next: () => {
-        alert('Solicitud actualizada correctamente.');
+        this.mensajeExitoPanel = 'Solicitud actualizada correctamente.';
         this.cerrarEditar();
         this.cargarSolicitudes();
       },
-      error: () => {
-        alert('Error al actualizar la solicitud.');
+      error: (error) => {
+        this.erroresSolicitudEditando.general =
+          error.error?.mensaje || 'Error al actualizar la solicitud.';
       }
     });
   }
 
   abrirChat(solicitud: Solicitud) {
     this.solicitudSeleccionada = solicitud;
+    this.errorChat = '';
     this.modalChatAbierto = true;
   }
 
   cerrarChat() {
     this.modalChatAbierto = false;
     this.mensajeChat = '';
+    this.errorChat = '';
     this.solicitudSeleccionada = null;
   }
 
   enviarMensajeChat(event: Event) {
     event.preventDefault();
 
+    this.errorChat = '';
+
     if (!this.solicitudSeleccionada?._id) {
       return;
     }
 
     if (this.mensajeChat.trim() === '') {
-      alert('Escribe un mensaje antes de enviar.');
+      this.errorChat = 'Escribe un mensaje antes de enviar.';
       return;
     }
 
     const nuevoMensaje = {
       rol: 'admin' as const,
       nombre: 'Admin Tech',
-      mensaje: this.mensajeChat,
+      mensaje: this.mensajeChat.trim(),
       fecha: new Date().toISOString()
     };
 
@@ -276,8 +500,8 @@ export class PanelAdmin {
           }
         });
       },
-      error: () => {
-        alert('Error al enviar el mensaje.');
+      error: (error) => {
+        this.errorChat = error.error?.mensaje || 'Error al enviar el mensaje.';
       }
     });
   }
@@ -285,37 +509,38 @@ export class PanelAdmin {
   cambiarEstado(id: string | undefined, nuevoEstado: string) {
     if (!id) return;
 
+    this.limpiarMensajesGenerales();
+
     this.solicitudService.actualizarSolicitudMongo(id, { estado: nuevoEstado }).subscribe({
       next: () => {
+        this.mensajeExitoPanel = 'Estado actualizado correctamente.';
         this.cargarSolicitudes();
       },
-      error: () => {
-        alert('Error al actualizar el estado.');
+      error: (error) => {
+        this.mensajeErrorPanel = error.error?.mensaje || 'Error al actualizar el estado.';
       }
     });
   }
 
   eliminarSolicitud(id: string | undefined) {
-    if (!id) return;
+    this.limpiarMensajesGenerales();
 
-    const confirmar = confirm('¿Eliminar definitivamente esta solicitud?');
-
-    if (confirmar) {
-      this.solicitudService.eliminarSolicitudMongo(id).subscribe({
-        next: () => {
-          alert('Solicitud eliminada correctamente.');
-          this.cargarSolicitudes();
-        },
-        error: () => {
-          alert('Error al eliminar la solicitud.');
-        }
-      });
+    if (!id) {
+      this.mensajeErrorPanel = 'No se pudo identificar la solicitud.';
+      return;
     }
+
+    this.idConfirmacion = id;
+    this.tipoConfirmacion = 'solicitud';
+    this.tituloConfirmacion = 'Eliminar solicitud';
+    this.mensajeConfirmacion = '¿Seguro que deseas eliminar definitivamente esta solicitud?';
+    this.modalConfirmacionAbierto = true;
   }
 
   abrirEditarUsuario(usuario: Usuario) {
     this.idUsuarioEditando = usuario._id;
     this.mostrarPasswordUsuario = false;
+    this.limpiarErroresUsuarioEditando();
 
     this.usuarioEditando = {
       _id: usuario._id,
@@ -333,6 +558,7 @@ export class PanelAdmin {
     this.modalEditarUsuarioAbierto = false;
     this.idUsuarioEditando = undefined;
     this.mostrarPasswordUsuario = false;
+    this.limpiarErroresUsuarioEditando();
 
     this.usuarioEditando = {
       nombre: '',
@@ -347,61 +573,134 @@ export class PanelAdmin {
     this.mostrarPasswordUsuario = !this.mostrarPasswordUsuario;
   }
 
+  validarUsuarioEditando(): boolean {
+    this.limpiarErroresUsuarioEditando();
+
+    let valido = true;
+
+    if (this.usuarioEditando.nombre.trim() === '') {
+      this.erroresUsuarioEditando.nombre = 'El nombre es obligatorio.';
+      valido = false;
+    } else if (!this.soloLetras(this.usuarioEditando.nombre.trim())) {
+      this.erroresUsuarioEditando.nombre = 'El nombre debe contener solo letras.';
+      valido = false;
+    }
+
+    if (!this.usuarioEditando.apellido || this.usuarioEditando.apellido.trim() === '') {
+      this.erroresUsuarioEditando.apellido = 'El apellido es obligatorio.';
+      valido = false;
+    } else if (!this.soloLetras(this.usuarioEditando.apellido.trim())) {
+      this.erroresUsuarioEditando.apellido = 'El apellido debe contener solo letras.';
+      valido = false;
+    }
+
+    if (this.usuarioEditando.email.trim() === '') {
+      this.erroresUsuarioEditando.email = 'El correo es obligatorio.';
+      valido = false;
+    } else if (!this.correoValido(this.usuarioEditando.email)) {
+      this.erroresUsuarioEditando.email = 'El correo debe tener un formato correcto.';
+      valido = false;
+    }
+
+    if (!this.usuarioEditando.rol || this.usuarioEditando.rol.trim() === '') {
+      this.erroresUsuarioEditando.rol = 'El rol es obligatorio.';
+      valido = false;
+    }
+
+    return valido;
+  }
+
   guardarEdicionUsuario(event: Event) {
     event.preventDefault();
+    this.limpiarMensajesGenerales();
 
     if (!this.idUsuarioEditando) {
       return;
     }
 
-    if (
-      this.usuarioEditando.nombre.trim() === '' ||
-      !this.usuarioEditando.apellido ||
-      this.usuarioEditando.apellido.trim() === '' ||
-      this.usuarioEditando.email.trim() === '' ||
-      this.usuarioEditando.rol.trim() === ''
-    ) {
-      alert('Nombre, apellido, correo y rol son obligatorios.');
+    if (!this.validarUsuarioEditando()) {
       return;
     }
 
     this.authService.actualizarUsuario(this.idUsuarioEditando, this.usuarioEditando).subscribe({
       next: () => {
-        alert('Usuario actualizado correctamente.');
+        this.mensajeExitoPanel = 'Usuario actualizado correctamente.';
         this.cerrarEditarUsuario();
         this.cargarUsuarios();
       },
-      error: () => {
-        alert('Error al actualizar usuario.');
+      error: (error) => {
+        this.erroresUsuarioEditando.general =
+          error.error?.mensaje || 'Error al actualizar usuario.';
       }
     });
   }
 
   eliminarUsuario(id: string | undefined) {
-    if (!id) return;
+    this.limpiarMensajesGenerales();
+
+    if (!id) {
+      this.mensajeErrorPanel = 'No se pudo identificar el usuario.';
+      return;
+    }
 
     const usuarioActual = this.authService.usuarioActual();
 
     if (usuarioActual?._id === id) {
-      alert('No puedes eliminar tu propia cuenta mientras estás logueado.');
+      this.mensajeErrorPanel = 'No puedes eliminar tu propia cuenta mientras estás logueado.';
       return;
     }
 
-    const confirmar = confirm('¿Eliminar definitivamente este usuario?');
+    this.idConfirmacion = id;
+    this.tipoConfirmacion = 'usuario';
+    this.tituloConfirmacion = 'Eliminar usuario';
+    this.mensajeConfirmacion = '¿Seguro que deseas eliminar definitivamente este usuario?';
+    this.modalConfirmacionAbierto = true;
+  }
 
-    if (!confirmar) {
+  cerrarConfirmacion() {
+    this.modalConfirmacionAbierto = false;
+    this.tituloConfirmacion = '';
+    this.mensajeConfirmacion = '';
+    this.tipoConfirmacion = '';
+    this.idConfirmacion = undefined;
+  }
+
+  confirmarEliminacion() {
+    this.limpiarMensajesGenerales();
+
+    if (!this.idConfirmacion || !this.tipoConfirmacion) {
+      this.mensajeErrorPanel = 'No se pudo procesar la eliminación.';
+      this.cerrarConfirmacion();
       return;
     }
 
-    this.authService.eliminarUsuario(id).subscribe({
-      next: () => {
-        alert('Usuario eliminado correctamente.');
-        this.cargarUsuarios();
-      },
-      error: () => {
-        alert('Error al eliminar usuario.');
-      }
-    });
+    if (this.tipoConfirmacion === 'solicitud') {
+      this.solicitudService.eliminarSolicitudMongo(this.idConfirmacion).subscribe({
+        next: () => {
+          this.mensajeExitoPanel = 'Solicitud eliminada correctamente.';
+          this.cargarSolicitudes();
+          this.cerrarConfirmacion();
+        },
+        error: (error) => {
+          this.mensajeErrorPanel = error.error?.mensaje || 'Error al eliminar la solicitud.';
+          this.cerrarConfirmacion();
+        }
+      });
+    }
+
+    if (this.tipoConfirmacion === 'usuario') {
+      this.authService.eliminarUsuario(this.idConfirmacion).subscribe({
+        next: () => {
+          this.mensajeExitoPanel = 'Usuario eliminado correctamente.';
+          this.cargarUsuarios();
+          this.cerrarConfirmacion();
+        },
+        error: (error) => {
+          this.mensajeErrorPanel = error.error?.mensaje || 'Error al eliminar usuario.';
+          this.cerrarConfirmacion();
+        }
+      });
+    }
   }
 
   private convertirBlobABase64(blob: Blob): Promise<string> {
@@ -435,8 +734,10 @@ export class PanelAdmin {
   }
 
   async exportarSolicitudesExcel() {
+    this.limpiarMensajesGenerales();
+
     if (this.solicitudes.length === 0) {
-      alert('No hay solicitudes para exportar.');
+      this.mensajeErrorPanel = 'No hay solicitudes para exportar.';
       return;
     }
 
@@ -777,5 +1078,7 @@ export class PanelAdmin {
     });
 
     saveAs(archivo, `reporte_crishotech_${new Date().getTime()}.xlsx`);
+
+    this.mensajeExitoPanel = 'Reporte Excel generado correctamente.';
   }
 }

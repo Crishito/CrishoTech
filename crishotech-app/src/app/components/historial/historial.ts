@@ -21,11 +21,25 @@ export class Historial {
   modalChatAbierto: boolean = false;
   mensajeChat: string = '';
 
+  mensajeExitoHistorial: string = '';
+  mensajeErrorHistorial: string = '';
+  mensajeAvisoHistorial: string = '';
+  errorChat: string = '';
+
+  modalConfirmacionAbierto: boolean = false;
+  idSolicitudEliminar: string | undefined = undefined;
+
   constructor(
     private solicitudService: SolicitudService,
     private authService: AuthService
   ) {
     this.cargarHistorial();
+  }
+
+  limpiarMensajes() {
+    this.mensajeExitoHistorial = '';
+    this.mensajeErrorHistorial = '';
+    this.mensajeAvisoHistorial = '';
   }
 
   cargarHistorial() {
@@ -44,38 +58,42 @@ export class Historial {
 
       },
       error: () => {
-        alert('Error al cargar el historial desde MongoDB.');
+        this.mensajeErrorHistorial = 'Error al cargar el historial desde MongoDB.';
       }
     });
   }
 
   abrirChat(solicitud: Solicitud) {
     this.solicitudSeleccionada = solicitud;
+    this.errorChat = '';
     this.modalChatAbierto = true;
   }
 
   cerrarChat() {
     this.modalChatAbierto = false;
     this.mensajeChat = '';
+    this.errorChat = '';
     this.solicitudSeleccionada = null;
   }
 
   enviarMensajeChat(event: Event) {
     event.preventDefault();
 
+    this.errorChat = '';
+
     if (!this.solicitudSeleccionada?._id) {
       return;
     }
 
     if (this.mensajeChat.trim() === '') {
-      alert('Escribe un mensaje antes de enviar.');
+      this.errorChat = 'Escribe un mensaje antes de enviar.';
       return;
     }
 
     const nuevoMensaje = {
       rol: 'usuario' as const,
       nombre: this.solicitudSeleccionada.nombre,
-      mensaje: this.mensajeChat,
+      mensaje: this.mensajeChat.trim(),
       fecha: new Date().toISOString()
     };
 
@@ -108,31 +126,53 @@ export class Historial {
             if (solicitudActual) {
               this.solicitudSeleccionada = solicitudActual;
             }
+          },
+          error: () => {
+            this.errorChat = 'Error al actualizar el chat.';
           }
         });
       },
       error: () => {
-        alert('Error al enviar el mensaje.');
+        this.errorChat = 'Error al enviar el mensaje.';
       }
     });
   }
 
   eliminarSolicitud(id: string | undefined) {
-    if (!id) return;
+    this.limpiarMensajes();
 
-    const confirmar = confirm('¿Estás seguro de eliminar esta solicitud del historial?');
-
-    if (!confirmar) {
+    if (!id) {
+      this.mensajeErrorHistorial = 'No se pudo identificar la solicitud.';
       return;
     }
 
-    this.solicitudService.eliminarSolicitudMongo(id).subscribe({
+    this.idSolicitudEliminar = id;
+    this.modalConfirmacionAbierto = true;
+  }
+
+  cerrarConfirmacion() {
+    this.modalConfirmacionAbierto = false;
+    this.idSolicitudEliminar = undefined;
+  }
+
+  confirmarEliminacion() {
+    this.limpiarMensajes();
+
+    if (!this.idSolicitudEliminar) {
+      this.mensajeErrorHistorial = 'No se pudo procesar la eliminación.';
+      this.cerrarConfirmacion();
+      return;
+    }
+
+    this.solicitudService.eliminarSolicitudMongo(this.idSolicitudEliminar).subscribe({
       next: () => {
-        alert('Solicitud eliminada correctamente.');
+        this.mensajeExitoHistorial = 'Solicitud eliminada correctamente.';
         this.cargarHistorial();
+        this.cerrarConfirmacion();
       },
       error: () => {
-        alert('Error al eliminar la solicitud.');
+        this.mensajeErrorHistorial = 'Error al eliminar la solicitud.';
+        this.cerrarConfirmacion();
       }
     });
   }

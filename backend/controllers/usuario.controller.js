@@ -2,6 +2,23 @@ const Usuario = require('../models/usuario.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// Función para validar correo electrónico.
+const correoValido = (correo) => {
+  const expresion = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return expresion.test(correo);
+};
+
+// Función para validar que un texto tenga solo letras y espacios.
+const soloLetras = (texto) => {
+  const expresion = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
+  return expresion.test(texto);
+};
+
+// Función para validar el rol del usuario.
+const rolValido = (rol) => {
+  return ['usuario', 'admin'].includes(rol);
+};
+
 // Registrar usuario
 const registrarUsuario = async (req, res) => {
   try {
@@ -13,7 +30,41 @@ const registrarUsuario = async (req, res) => {
       });
     }
 
-    const usuarioExistente = await Usuario.findOne({ correo });
+    if (!soloLetras(nombre.trim())) {
+      return res.status(400).json({
+        mensaje: 'El nombre debe contener solo letras.'
+      });
+    }
+
+    if (!soloLetras(apellido.trim())) {
+      return res.status(400).json({
+        mensaje: 'El apellido debe contener solo letras.'
+      });
+    }
+
+    if (!correoValido(correo.trim())) {
+      return res.status(400).json({
+        mensaje: 'El correo no tiene un formato válido.'
+      });
+    }
+
+    if (password.trim().length < 8) {
+      return res.status(400).json({
+        mensaje: 'La contraseña debe tener mínimo 8 caracteres.'
+      });
+    }
+
+    const rolUsuario = rol || 'usuario';
+
+    if (!rolValido(rolUsuario)) {
+      return res.status(400).json({
+        mensaje: 'El rol ingresado no es válido.'
+      });
+    }
+
+    const correoNormalizado = correo.trim().toLowerCase();
+
+    const usuarioExistente = await Usuario.findOne({ correo: correoNormalizado });
 
     if (usuarioExistente) {
       return res.status(400).json({
@@ -21,15 +72,14 @@ const registrarUsuario = async (req, res) => {
       });
     }
 
-    // Encriptamos la contraseña antes de guardarla en MongoDB.
-    const passwordEncriptada = await bcrypt.hash(password, 10);
+    const passwordEncriptada = await bcrypt.hash(password.trim(), 10);
 
     const nuevoUsuario = new Usuario({
-      nombre,
-      apellido,
-      correo,
+      nombre: nombre.trim(),
+      apellido: apellido.trim(),
+      correo: correoNormalizado,
       password: passwordEncriptada,
-      rol: rol || 'usuario'
+      rol: rolUsuario
     });
 
     await nuevoUsuario.save();
@@ -65,7 +115,15 @@ const loginUsuario = async (req, res) => {
       });
     }
 
-    const usuario = await Usuario.findOne({ correo });
+    if (!correoValido(correo.trim())) {
+      return res.status(400).json({
+        mensaje: 'El correo no tiene un formato válido.'
+      });
+    }
+
+    const correoNormalizado = correo.trim().toLowerCase();
+
+    const usuario = await Usuario.findOne({ correo: correoNormalizado });
 
     if (!usuario) {
       return res.status(404).json({
@@ -73,7 +131,6 @@ const loginUsuario = async (req, res) => {
       });
     }
 
-    // Comparamos la contraseña ingresada con la contraseña encriptada.
     const passwordValida = await bcrypt.compare(password, usuario.password);
 
     if (!passwordValida) {
@@ -82,7 +139,6 @@ const loginUsuario = async (req, res) => {
       });
     }
 
-    // Creamos el token JWT con datos básicos del usuario.
     const token = jwt.sign(
       {
         id: usuario._id,
@@ -144,22 +200,67 @@ const actualizarUsuario = async (req, res) => {
       });
     }
 
+    if (!soloLetras(nombre.trim())) {
+      return res.status(400).json({
+        mensaje: 'El nombre debe contener solo letras.'
+      });
+    }
+
+    if (!soloLetras(apellido.trim())) {
+      return res.status(400).json({
+        mensaje: 'El apellido debe contener solo letras.'
+      });
+    }
+
+    if (!correoValido(correo.trim())) {
+      return res.status(400).json({
+        mensaje: 'El correo no tiene un formato válido.'
+      });
+    }
+
+    if (!rolValido(rol)) {
+      return res.status(400).json({
+        mensaje: 'El rol ingresado no es válido.'
+      });
+    }
+
+    if (password && password.trim() !== '' && password.trim().length < 8) {
+      return res.status(400).json({
+        mensaje: 'La nueva contraseña debe tener mínimo 8 caracteres.'
+      });
+    }
+
+    const correoNormalizado = correo.trim().toLowerCase();
+
+    const correoExistente = await Usuario.findOne({
+      correo: correoNormalizado,
+      _id: { $ne: req.params.id }
+    });
+
+    if (correoExistente) {
+      return res.status(400).json({
+        mensaje: 'El correo ya está registrado por otro usuario.'
+      });
+    }
+
     const datosActualizados = {
-      nombre,
-      apellido,
-      correo,
+      nombre: nombre.trim(),
+      apellido: apellido.trim(),
+      correo: correoNormalizado,
       rol
     };
 
-    // Si el admin escribe una nueva contraseña, se guarda encriptada.
     if (password && password.trim() !== '') {
-      datosActualizados.password = await bcrypt.hash(password, 10);
+      datosActualizados.password = await bcrypt.hash(password.trim(), 10);
     }
 
     const usuarioActualizado = await Usuario.findByIdAndUpdate(
       req.params.id,
       datosActualizados,
-      { new: true }
+      {
+        new: true,
+        runValidators: true
+      }
     ).select('-password');
 
     if (!usuarioActualizado) {
