@@ -135,39 +135,19 @@ export class Carrito {
 
         // SI LA PETICIÓN SALE CORRECTAMENTE
         next: (respuesta) => {
-
-          // MUESTRA LA RESPUESTA DEL BACKEND
           console.log('Respuesta del backend:', respuesta);
-
-          // AUMENTA EL CONTADOR
           completadas++;
-
-          // VERIFICA SI TODAS LAS PETICIONES TERMINARON
           if (completadas === peticiones.length) {
-
-            // VACÍA EL CARRITO
             this.solicitudService.vaciarCarrito();
-
-            // RECARGA EL CARRITO
             this.cargarCarrito();
-
-            // MENSAJE DE ÉXITO
             alert('Pedido confirmado y guardado en MongoDB.');
-
-            // REDIRECCIONA AL HISTORIAL
             this.router.navigate(['/historial']);
-
           }
 
         },
-
-        // SI OCURRE UN ERROR
         error: (error) => {
-
-          // MUESTRA EL ERROR EN CONSOLA
           console.error('Error al guardar en MongoDB:', error);
-
-          // MENSAJE DE ERROR
+          
           alert('Error al guardar una solicitud en MongoDB. Revisa la consola.');
 
         }

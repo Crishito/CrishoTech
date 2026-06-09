@@ -67,6 +67,29 @@ export class AuthService {
     );
   }
 
+  // Obtiene todos los usuarios registrados desde MongoDB.
+  obtenerUsuarios(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
+  }
+
+  // Actualiza un usuario por su ID.
+  actualizarUsuario(id: string, usuario: Usuario): Observable<any> {
+    const datosParaBackend = {
+      nombre: usuario.nombre,
+      apellido: usuario.apellido,
+      correo: usuario.email,
+      password: usuario.password,
+      rol: usuario.rol
+    };
+
+    return this.http.put(`${this.apiUrl}/${id}`, datosParaBackend);
+  }
+
+  // Elimina un usuario por su ID.
+  eliminarUsuario(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+
   // Guarda la sesión del usuario en localStorage.
   guardarSesion(usuario: Usuario) {
     localStorage.setItem('usuarioActual', JSON.stringify(usuario));

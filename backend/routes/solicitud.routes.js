@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
     });
   }
 });
-// CHAT - agregar mensaje a una solicitud
+// CHAT - agregar mensaje al chat de una solicitud
 router.put('/:id/chat', async (req, res) => {
   try {
     const { rol, nombre, mensaje } = req.body;
