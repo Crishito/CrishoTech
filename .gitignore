@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+backend/node_modules/
+crishotech-app/node_modules/
+
+# Variables de entorno
+.env
+backend/.env
+crishotech-app/.env
+
+# Angular
+crishotech-app/dist/
+crishotech-app/.angular/cache/
+
+# Backend logs
+*.log
+npm-debug.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
