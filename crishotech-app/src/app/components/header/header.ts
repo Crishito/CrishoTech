@@ -71,8 +71,8 @@ export class Header {
       this.irASeccion('servicios');
     }
 
-    // CTRL + C = CONTACTO
-    if (event.ctrlKey && tecla === 'c') {
+    // CTRL + shift + C = CONTACTO
+    if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'c') {
       event.preventDefault();
       this.irASeccion('contacto');
     }

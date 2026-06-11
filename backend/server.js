@@ -21,14 +21,14 @@ const app = express();
 
 // Definimos el puerto del servidor.
 const PORT = process.env.PORT || 3000;
-
 // Activamos CORS para permitir peticiones desde Angular.
+
 app.use(cors());
-
 // Permitimos que Express entienda datos en formato JSON.
-app.use(express.json());
 
+app.use(express.json());
 // Ruta inicial para comprobar que el backend funciona.
+
 app.get('/', (req, res) => {
   res.send('Backend de CrishoTech funcionando correctamente');
 });
