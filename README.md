@@ -1,4 +1,3 @@
-```markdown
 # CrishoTech
 
 CrishoTech es una aplicación web desarrollada con Angular, Node.js, Express y MongoDB,
@@ -62,7 +61,8 @@ Componentes principales:
 
 ### Backend
 
-Desarrollado con Node.js y Express. Se encarga de recibir las peticiones del frontend, conectarse con MongoDB y gestionar la información del sistema.
+Desarrollado con Node.js y Express. Se encarga de recibir las peticiones del frontend,
+conectarse con MongoDB y gestionar la información del sistema.
 
 Archivos principales:
 
