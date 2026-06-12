@@ -1,5 +1,7 @@
+// Importación de Mongoose para crear esquemas y modelos.
 const mongoose = require('mongoose');
 
+// Esquema para guardar los mensajes del chat dentro de una solicitud.
 const mensajeChatSchema = new mongoose.Schema({
   rol: {
     type: String,
@@ -20,6 +22,7 @@ const mensajeChatSchema = new mongoose.Schema({
   }
 });
 
+// Esquema principal para registrar las solicitudes de servicio.
 const solicitudSchema = new mongoose.Schema({
   servicio: {
     type: String,
@@ -68,4 +71,5 @@ const solicitudSchema = new mongoose.Schema({
   }
 });
 
+// Exporta el modelo Solicitud para usarlo en rutas y controladores.
 module.exports = mongoose.model('Solicitud', solicitudSchema);

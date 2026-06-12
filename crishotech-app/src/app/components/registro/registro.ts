@@ -1,16 +1,19 @@
+// Importaciones necesarias para el componente Registro.
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
+// Configuración del componente Registro.
 @Component({
   selector: 'app-registro',
   imports: [FormsModule, RouterLink],
   templateUrl: './registro.html',
-  styleUrl: './registro.css',
+
 })
 export class Registro {
 
+  // Datos ingresados por el usuario en el formulario.
   nombre: string = '';
   apellido: string = '';
   email: string = '';
@@ -19,6 +22,7 @@ export class Registro {
   // Por defecto, toda cuenta creada desde el registro será usuario.
   rol: 'usuario' | 'admin' = 'usuario';
 
+  // Mensajes de validación para cada campo.
   errorNombre: string = '';
   errorApellido: string = '';
   errorEmail: string = '';
@@ -33,6 +37,7 @@ export class Registro {
     private router: Router
   ) {}
 
+  // Permite registrar usando Ctrl + Enter.
   atajoRegistrar(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === 'Enter') {
       event.preventDefault();
@@ -40,6 +45,7 @@ export class Registro {
     }
   }
 
+  // Valida el formulario y envía los datos al backend.
   registrarUsuario(event: Event) {
     event.preventDefault();
 
@@ -94,6 +100,7 @@ export class Registro {
     // Si no hay admin logueado, siempre se registra como usuario normal.
     const rolFinal: 'usuario' | 'admin' = this.authService.esAdmin() ? this.rol : 'usuario';
 
+    // Envía los datos al servicio de autenticación para crear el usuario.
     this.authService.registrar({
       nombre: this.nombre,
       apellido: this.apellido,
@@ -110,6 +117,7 @@ export class Registro {
         this.password = '';
         this.rol = 'usuario';
 
+        // Redirige según el rol de quien creó la cuenta.
         setTimeout(() => {
           if (this.authService.esAdmin()) {
             this.router.navigate(['/admin']);
@@ -124,6 +132,7 @@ export class Registro {
     });
   }
 
+  // Valida el nombre mientras el usuario escribe.
   validarNombreEnTiempoReal() {
     const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
@@ -136,6 +145,7 @@ export class Registro {
     }
   }
 
+  // Valida el apellido mientras el usuario escribe.
   validarApellidoEnTiempoReal() {
     const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
@@ -148,6 +158,7 @@ export class Registro {
     }
   }
 
+  // Valida el formato del correo mientras el usuario escribe.
   validarEmailEnTiempoReal() {
     const correoValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -160,6 +171,7 @@ export class Registro {
     }
   }
 
+  // Valida la contraseña mientras el usuario escribe.
   validarPasswordEnTiempoReal() {
     if (this.password.length === 0) {
       this.errorPassword = '';

@@ -1,12 +1,15 @@
+<!-- SECCIÓN PRINCIPAL DE SERVICIOS -->
 <section id="servicios" class="py-24 bg-cover bg-center bg-no-repeat" style="background-image: url('/img/fondo_servicios.jpg');">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
+    <!-- MENSAJE DE AVISO EN LA PÁGINA -->
     @if (mensajeAvisoPagina) {
       <div class="mb-8 bg-yellow-50 border border-yellow-300 text-yellow-700 text-sm p-4 rounded-xl font-semibold text-center">
         {{ mensajeAvisoPagina }}
       </div>
     }
 
+    <!-- ENCABEZADO DE LA SECCIÓN DE SERVICIOS -->
     <div class="text-center mb-16">
       <h2 class="text-blue-600 font-bold tracking-widest uppercase text-sm mb-3">
         Servicios de Calidad
@@ -19,28 +22,35 @@
       <div class="h-1.5 w-20 bg-blue-600 mx-auto rounded-full"></div>
     </div>
 
+    <!-- LISTADO DE SERVICIOS DISPONIBLES -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
+      <!-- @for recorre los servicios registrados en el componente -->
       @for (servicio of servicios; track servicio.nombre) {
         <div class="p-8 bg-gray-50 rounded-3xl border border-gray-100 hover:shadow-xl transition-all group relative flex flex-col h-full">
 
+          <!-- ÍCONO DEL SERVICIO -->
           <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
             <i [class]="servicio.icono"></i>
           </div>
 
+          <!-- NOMBRE DEL SERVICIO -->
           <h3 class="text-xl font-bold mb-3">
             {{ servicio.nombre }}
           </h3>
 
+          <!-- IMAGEN DEL SERVICIO -->
           <img
             [src]="servicio.imagen"
             alt="imagen servicio"
             class="w-full h-40 object-cover rounded-xl mb-4">
 
+          <!-- DESCRIPCIÓN DEL SERVICIO -->
           <p class="text-gray-600 leading-relaxed mb-6 flex-grow">
             {{ servicio.descripcion }}
           </p>
 
+          <!-- BOTÓN PARA ABRIR EL MODAL DE SOLICITUD -->
           <button
             (click)="abrirModal(servicio.nombre)"
             class="w-full py-3 rounded-xl border-2 border-blue-600 text-blue-600 font-bold hover:bg-blue-600 hover:text-white transition mt-auto">
@@ -54,6 +64,7 @@
   </div>
 </section>
 
+<!-- SECCIÓN PARA SOLICITAR SERVICIO A DOMICILIO -->
 <section id="agendar-citas" class="py-24 bg-blue-600 text-white">
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
 
@@ -66,6 +77,7 @@
       Rápido, fácil y organizado.
     </p>
 
+    <!-- BOTÓN PARA ABRIR EL MODAL DE SERVICIO A DOMICILIO -->
     <button
       (click)="abrirModal('Servicio a Domicilio')"
       class="bg-white text-blue-600 px-10 py-4 rounded-full font-bold text-lg shadow-xl hover:bg-blue-50 transition">
@@ -76,11 +88,13 @@
   </div>
 </section>
 
+<!-- MODAL PARA CREAR UNA SOLICITUD DE SERVICIO -->
 @if (modalAbierto) {
   <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
 
     <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
 
+      <!-- ENCABEZADO DEL MODAL -->
       <div class="bg-blue-600 p-6 text-white flex justify-between items-center">
         <h3 class="text-xl font-bold flex items-center gap-2">
           <i class="fa-solid fa-file-signature"></i>
@@ -94,20 +108,24 @@
         </button>
       </div>
 
+      <!-- FORMULARIO DE SOLICITUD -->
       <form class="p-8 space-y-4" (submit)="guardarSolicitud($event)" novalidate>
 
+        <!-- MENSAJE DE ÉXITO DE LA SOLICITUD -->
         @if (mensajeExitoSolicitud) {
           <div class="bg-green-50 border border-green-300 text-green-700 text-sm p-3 rounded-xl font-semibold text-center">
             {{ mensajeExitoSolicitud }}
           </div>
         }
 
+        <!-- MENSAJE DE ERROR DE LA SOLICITUD -->
         @if (mensajeErrorSolicitud) {
           <div class="bg-red-50 border border-red-300 text-red-600 text-sm p-3 rounded-xl font-semibold text-center">
             {{ mensajeErrorSolicitud }}
           </div>
         }
 
+        <!-- CAMPOS DE NOMBRE Y CÉDULA -->
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase">
@@ -150,6 +168,7 @@
           </div>
         </div>
 
+        <!-- CAMPOS DE TELÉFONO Y CORREO -->
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase">
@@ -192,6 +211,7 @@
           </div>
         </div>
 
+        <!-- CAMPO DE DIRECCIÓN -->
         <div>
           <label class="block text-xs font-bold text-gray-500 uppercase">
             Dirección
@@ -211,6 +231,7 @@
           }
         </div>
 
+        <!-- CAMPO DE DESCRIPCIÓN DEL REQUERIMIENTO -->
         <div>
           <label class="block text-xs font-bold text-gray-500 uppercase">
             Descripción del Requerimiento
@@ -232,6 +253,7 @@
           }
         </div>
 
+        <!-- BOTÓN PARA GUARDAR LA SOLICITUD EN EL CARRITO -->
         <button
           type="submit"
           class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition">

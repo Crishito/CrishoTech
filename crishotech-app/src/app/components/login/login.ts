@@ -1,26 +1,27 @@
+// Importaciones necesarias para el componente Login.
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
+// Configuración del componente Login.
 @Component({
   selector: 'app-login',
   imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
-  styleUrl: './login.css',
 })
 export class Login {
 
-  // Datos que escribe el usuario en el formulario.
+  // Datos ingresados por el usuario.
   email: string = '';
   password: string = '';
 
-  // Mensajes de error para mostrar en pantalla.
+  // Mensajes de validación y errores.
   errorEmail: string = '';
   errorPassword: string = '';
   errorGeneral: string = '';
 
-  // Mensaje de éxito para mostrar en pantalla sin usar alert.
+  // Mensaje visual de éxito.
   mensajeExito: string = '';
 
   constructor(
@@ -28,8 +29,7 @@ export class Login {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // Recibe mensajes enviados desde los guards.
-    // Ejemplo: cuando intenta entrar al historial sin ser cliente.
+    // Recibe mensajes enviados desde rutas protegidas o guards.
     this.route.queryParams.subscribe(params => {
       if (params['mensaje']) {
         this.errorGeneral = params['mensaje'];
@@ -37,7 +37,7 @@ export class Login {
     });
   }
 
-  // Permite iniciar sesión con Ctrl + Enter.
+  // Permite iniciar sesión usando Ctrl + Enter.
   atajoLogin(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === 'Enter') {
       event.preventDefault();
@@ -45,7 +45,7 @@ export class Login {
     }
   }
 
-  // Valida el correo mientras el usuario escribe.
+  // Valida el formato del correo mientras el usuario escribe.
   validarEmailEnTiempoReal() {
     const correoValido = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -61,7 +61,7 @@ export class Login {
     }
   }
 
-  // Limpia el error de contraseña mientras el usuario escribe.
+  // Limpia errores relacionados con la contraseña.
   validarPasswordEnTiempoReal() {
     this.mensajeExito = '';
 
@@ -71,7 +71,7 @@ export class Login {
     }
   }
 
-  // Valida el formulario e inicia sesión.
+  // Valida el formulario y envía las credenciales al backend.
   iniciarSesion(event: Event) {
     event.preventDefault();
 
@@ -104,10 +104,12 @@ export class Login {
       return;
     }
 
+    // Llama al servicio de autenticación para iniciar sesión.
     this.authService.login(this.email.trim(), this.password.trim()).subscribe({
       next: () => {
         this.mensajeExito = 'Inicio de sesión correcto.';
 
+        // Redirige según el rol del usuario autenticado.
         setTimeout(() => {
           if (this.authService.esAdmin()) {
             this.router.navigate(['/admin']);

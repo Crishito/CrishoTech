@@ -1,7 +1,11 @@
+<!-- SECCIÓN PRINCIPAL DEL LOGIN -->
 <section class="pt-32 pb-20 bg-gray-100 min-h-screen">
+
+  <!-- CONTENEDOR DEL FORMULARIO -->
   <div class="max-w-md mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
     <div class="p-8">
 
+      <!-- BOTONES PARA CAMBIAR ENTRE LOGIN Y REGISTRO -->
       <div class="flex justify-center mb-8">
         <div class="inline-flex rounded-lg bg-gray-100 p-1">
 
@@ -21,6 +25,7 @@
         </div>
       </div>
 
+      <!-- FORMULARIO DE INICIO DE SESIÓN -->
       <form
         class="space-y-6"
         (submit)="iniciarSesion($event)"
@@ -45,7 +50,7 @@
           </div>
         }
 
-        <!-- CAMPO EMAIL -->
+        <!-- CAMPO EMAIL CON VALIDACIÓN EN TIEMPO REAL -->
         <div class="relative">
           <label class="block text-sm font-medium text-gray-700">
             Email
@@ -66,7 +71,7 @@
           }
         </div>
 
-        <!-- CAMPO CONTRASEÑA -->
+        <!-- CAMPO CONTRASEÑA CON VALIDACIÓN EN TIEMPO REAL -->
         <div class="relative">
           <label class="block text-sm font-medium text-gray-700">
             Contraseña
@@ -87,6 +92,7 @@
           }
         </div>
 
+        <!-- BOTÓN PARA ENVIAR EL FORMULARIO -->
         <button
           type="submit"
           class="w-full bg-blue-600 py-4 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition">

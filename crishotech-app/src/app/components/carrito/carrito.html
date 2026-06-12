@@ -1,18 +1,18 @@
 <!-- SECCIÓN PRINCIPAL DEL CARRITO -->
 <section class="pt-32 pb-20 bg-gray-50 min-h-screen">
 
-  <!-- CONTENEDOR CENTRAL -->
+  <!-- CONTENEDOR CENTRAL QUE LIMITA EL ANCHO DEL CONTENIDO -->
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- ENCABEZADO -->
+    <!-- ENCABEZADO DEL CARRITO -->
     <div class="flex justify-between items-center mb-8">
 
-      <!-- TÍTULO -->
+      <!-- TÍTULO PRINCIPAL DE LA VISTA -->
       <h2 class="text-3xl font-bold text-blue-900">
         Mi Carrito de Servicios
       </h2>
 
-      <!-- BOTÓN PARA VOLVER AL INICIO -->
+      <!-- routerLink permite navegar al inicio sin recargar la página -->
       <button
         routerLink="/"
         class="text-blue-600 font-semibold flex items-center gap-2 hover:text-blue-800 transition">
@@ -22,43 +22,43 @@
 
     </div>
 
-    <!-- MENSAJE DE ÉXITO -->
+    <!-- @if muestra este mensaje solo cuando existe un mensaje de éxito -->
     @if (mensajeExitoCarrito) {
       <div class="mb-6 bg-green-50 border border-green-300 text-green-700 text-sm p-4 rounded-xl font-semibold">
         {{ mensajeExitoCarrito }}
       </div>
     }
 
-    <!-- MENSAJE DE ERROR -->
+    <!-- @if muestra este mensaje solo cuando existe un error en el carrito -->
     @if (mensajeErrorCarrito) {
       <div class="mb-6 bg-red-50 border border-red-300 text-red-600 text-sm p-4 rounded-xl font-semibold">
         {{ mensajeErrorCarrito }}
       </div>
     }
 
-    <!-- MENSAJE DE AVISO -->
+    <!-- @if muestra avisos informativos para el usuario -->
     @if (mensajeAvisoCarrito) {
       <div class="mb-6 bg-yellow-50 border border-yellow-300 text-yellow-700 text-sm p-4 rounded-xl font-semibold">
         {{ mensajeAvisoCarrito }}
       </div>
     }
 
-    <!-- CONTENEDOR DE LA TABLA -->
+    <!-- CONTENEDOR DE LA TABLA DE SOLICITUDES -->
     <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
 
-      <!-- TABLA -->
+      <!-- TABLA DONDE SE MUESTRAN LOS SERVICIOS AGREGADOS AL CARRITO -->
       <table class="w-full text-left">
 
         <!-- CABECERA DE LA TABLA -->
         <thead class="bg-gray-100 border-b border-gray-200">
           <tr>
 
-            <!-- COLUMNA DE SERVICIO -->
+            <!-- COLUMNA PARA MOSTRAR EL NOMBRE Y DETALLE DEL SERVICIO -->
             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
               Servicio / Detalles
             </th>
 
-            <!-- COLUMNA DE ACCIONES -->
+            <!-- COLUMNA PARA LAS ACCIONES DEL USUARIO -->
             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase text-center">
               Acciones
             </th>
@@ -69,13 +69,13 @@
         <!-- CUERPO DE LA TABLA -->
         <tbody class="divide-y divide-gray-100">
 
-          <!-- RECORRE TODAS LAS SOLICITUDES DEL CARRITO -->
+          <!-- @for recorre el arreglo de solicitudes y muestra cada servicio agregado al carrito -->
           @for (item of solicitudes; track item.id) {
 
-            <!-- FILA DE CADA SERVICIO -->
+            <!-- FILA QUE REPRESENTA UNA SOLICITUD DEL CARRITO -->
             <tr class="hover:bg-gray-50">
 
-              <!-- INFORMACIÓN DEL SERVICIO -->
+              <!-- INFORMACIÓN DEL SERVICIO SELECCIONADO -->
               <td class="px-6 py-4">
 
                 <!-- NOMBRE DEL SERVICIO -->
@@ -83,21 +83,22 @@
                   {{ item.servicio }}
                 </div>
 
-                <!-- DESCRIPCIÓN -->
+                <!-- DESCRIPCIÓN DEL SERVICIO -->
                 <div class="text-xs text-gray-500">
                   {{ item.descripcion }}
                 </div>
 
-                <!-- DATOS DEL CLIENTE -->
+                <!-- DATOS BÁSICOS DEL CLIENTE ASOCIADO A LA SOLICITUD -->
                 <div class="text-xs text-gray-400 mt-1">
                   Cliente: {{ item.nombre }} | Tel: {{ item.telefono }}
                 </div>
 
               </td>
 
-              <!-- BOTÓN QUITAR -->
+              <!-- COLUMNA DE ACCIÓN PARA QUITAR UN SERVICIO DEL CARRITO -->
               <td class="px-6 py-4 text-center">
 
+                <!-- Evento click que ejecuta el método eliminarSolicitud y elimina el servicio seleccionado -->
                 <button
                   type="button"
                   (click)="eliminarSolicitud(item.id)"
@@ -115,15 +116,15 @@
 
       </table>
 
-      <!-- MENSAJE SI EL CARRITO ESTÁ VACÍO -->
+      <!-- @if muestra este bloque únicamente cuando no existen solicitudes en el carrito -->
       @if (solicitudes.length === 0) {
 
         <div class="p-12 text-center text-gray-400">
 
-          <!-- ÍCONO -->
+          <!-- ÍCONO REPRESENTATIVO DEL CARRITO VACÍO -->
           <i class="fa-solid fa-cart-arrow-down text-5xl mb-4"></i>
 
-          <!-- MENSAJE -->
+          <!-- MENSAJE INFORMATIVO PARA EL USUARIO -->
           <p>No tienes solicitudes pendientes en tu carrito.</p>
 
         </div>
@@ -132,12 +133,12 @@
 
     </div>
 
-    <!-- BOTONES FINALES SI EXISTEN SOLICITUDES -->
+    <!-- @if muestra los botones finales solo cuando el carrito tiene solicitudes -->
     @if (solicitudes.length > 0) {
 
       <div class="mt-8 flex justify-end gap-4">
 
-        <!-- BOTÓN VACIAR CARRITO -->
+        <!-- Evento click que ejecuta el método vaciarCarrito para eliminar todas las solicitudes -->
         <button
           type="button"
           (click)="vaciarCarrito()"
@@ -145,7 +146,7 @@
           Vaciar Carrito
         </button>
 
-        <!-- BOTÓN CONFIRMAR PEDIDO -->
+        <!-- Evento click que ejecuta el método confirmarPedido para finalizar la solicitud de servicios -->
         <button
           type="button"
           (click)="confirmarPedido()"

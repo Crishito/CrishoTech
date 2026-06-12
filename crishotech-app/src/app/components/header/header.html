@@ -1,69 +1,73 @@
-<!-- HEADER / BARRA DE NAVEGACIÓN -->
+<!-- HEADER PRINCIPAL / BARRA DE NAVEGACIÓN FIJA -->
 <header id="main-nav" class="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100 transition-all">
 
-  <!-- CONTENEDOR PRINCIPAL -->
+  <!-- CONTENEDOR PRINCIPAL QUE CENTRA EL CONTENIDO DEL HEADER -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-    <!-- CONTENIDO DEL NAVBAR -->
+    <!-- CONTENIDO DEL NAVBAR: LOGO A LA IZQUIERDA Y MENÚ A LA DERECHA -->
     <div class="flex justify-between items-center h-20">
 
-      <!-- LOGO -->
+      <!-- LOGO Y NOMBRE DE LA APLICACIÓN, CON NAVEGACIÓN HACIA EL INICIO -->
       <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
 
-        <!-- Icono -->
+        <!-- CONTENEDOR DEL LOGO DE CRISHOTECH -->
         <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
+
+          <!-- IMAGEN DEL LOGO DE LA APLICACIÓN -->
           <img src="/img/logo.png" alt="Logo" class="h-10 w-auto">
+
         </div>
 
-        <!-- NOMBRE -->
+        <!-- NOMBRE DE LA MARCA CON COLORES DIFERENCIADOS -->
         <span class="font-bold text-2xl tracking-tight">
           <span class="text-orange-500">Crisho</span><span class="text-blue-400">Tech</span>
         </span>
 
       </div>
 
-      <!-- MENÚ DESKTOP -->
+      <!-- MENÚ DE NAVEGACIÓN PARA PANTALLAS MEDIANAS Y GRANDES -->
       <div class="hidden md:flex space-x-8 items-center">
 
-        <!-- BOTÓN INICIO -->
+        <!-- Evento click que desplaza la vista hacia la sección Inicio -->
         <button
           (click)="irASeccion('inicio')"
           class="text-gray-600 hover:text-blue-600 font-medium transition">
           Inicio
         </button>
 
-        <!-- BOTÓN PROPÓSITO -->
+        <!-- Evento click que desplaza la vista hacia la sección Misión y Visión -->
         <button
           (click)="irASeccion('mision-vision')"
           class="text-gray-600 hover:text-blue-600 font-medium transition">
           Nuestro Propósito
         </button>
 
-        <!-- BOTÓN SERVICIOS -->
+        <!-- Evento click que desplaza la vista hacia la sección Servicios -->
         <button
           (click)="irASeccion('servicios')"
           class="text-gray-600 hover:text-blue-600 font-medium transition">
           Servicios
         </button>
 
-        <!-- BOTÓN CONTACTO -->
+        <!-- Evento click que desplaza la vista hacia la sección Contacto -->
         <button
           (click)="irASeccion('contacto')"
           class="text-gray-600 hover:text-blue-600 font-medium transition">
           Contacto
         </button>
 
-        <!-- OPCIONES SI EL USUARIO NO HA INICIADO SESIÓN -->
+        <!-- @if muestra estas opciones únicamente cuando el usuario no ha iniciado sesión -->
         @if (!authService.estaLogueado()) {
 
+          <!-- CONTENEDOR DE BOTONES PARA ACCESO Y REGISTRO -->
           <div class="flex gap-4 items-center">
 
-            <!-- LOGIN -->
+            <!-- routerLink redirige al formulario de inicio de sesión -->
             <button routerLink="/login" class="text-blue-600 font-semibold">
               Iniciar Sesión
             </button>
 
-            <!-- REGISTRO -->
+            <!-- routerLink redirige al formulario de registro -->
             <button
               routerLink="/registro"
               class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-full font-semibold transition shadow-md">
@@ -74,25 +78,25 @@
 
         }
 
-        <!-- OPCIONES PARA CLIENTE -->
+        <!-- @if muestra estas opciones solo cuando el usuario logueado tiene rol de cliente -->
         @if (authService.esUsuario()) {
 
-          <!-- HISTORIAL -->
+          <!-- Botón para acceder al historial de solicitudes del cliente -->
           <button routerLink="/historial" class="relative cursor-pointer" title="Mis Solicitudes">
             <i class="fa-solid fa-clock-rotate-left text-gray-600 text-xl hover:text-blue-600 transition"></i>
           </button>
 
-          <!-- CARRITO -->
+          <!-- Botón para acceder al carrito de servicios del cliente -->
           <button routerLink="/carrito" class="relative cursor-pointer" title="Mi Carrito">
             <i class="fa-solid fa-cart-shopping text-gray-600 text-xl hover:text-blue-600 transition"></i>
           </button>
 
-          <!-- ETIQUETA CLIENTE -->
+          <!-- Etiqueta visual que identifica el rol del usuario como cliente -->
           <span class="bg-sky-100 text-sky-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
             Cliente
           </span>
 
-          <!-- CERRAR SESIÓN -->
+          <!-- Evento click que ejecuta el cierre de sesión del usuario -->
           <button
             (click)="cerrarSesion()"
             class="text-gray-400 hover:text-red-500"
@@ -102,29 +106,29 @@
 
         }
 
-        <!-- OPCIONES PARA ADMIN -->
+        <!-- @if muestra estas opciones solo cuando el usuario logueado tiene rol de administrador -->
         @if (authService.esAdmin()) {
 
-          <!-- PANEL ADMIN -->
+          <!-- routerLink redirige al panel administrativo o técnico -->
           <button
             routerLink="/admin"
             class="text-gray-600 hover:text-blue-600 font-medium transition">
             Panel Técnico
           </button>
 
-          <!-- CREAR USUARIO O ADMIN -->
+          <!-- routerLink permite al administrador crear nuevos usuarios o administradores -->
           <button
             routerLink="/registro"
             class="text-gray-600 hover:text-blue-600 font-medium transition">
             Crear Usuario
           </button>
 
-          <!-- ETIQUETA ADMIN -->
+          <!-- Etiqueta visual que identifica el rol del usuario como administrador -->
           <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
             Admin
           </span>
 
-          <!-- CERRAR SESIÓN -->
+          <!-- Evento click que ejecuta el cierre de sesión del administrador -->
           <button
             (click)="cerrarSesion()"
             class="text-gray-400 hover:text-red-500"

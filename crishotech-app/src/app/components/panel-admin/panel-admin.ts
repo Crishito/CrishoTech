@@ -1,3 +1,4 @@
+// Importaciones necesarias para el panel administrativo.
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -11,17 +12,22 @@ import { Usuario } from '../../models/usuario';
 import { SolicitudService } from '../../services/solicitud.service';
 import { AuthService } from '../../services/auth.service';
 
+// Configuración del componente PanelAdmin.
 @Component({
   selector: 'app-panel-admin',
   imports: [FormsModule, RouterLink, DatePipe, NgFor, NgIf],
   templateUrl: './panel-admin.html',
-  styleUrl: './panel-admin.css',
 })
+// Componente encargado de administrar solicitudes, usuarios, chat y reportes.
 export class PanelAdmin {
 
+  // Listas principales mostradas en el panel.
+  // Listas principales para mostrar solicitudes y usuarios.
   solicitudes: Solicitud[] = [];
   usuarios: Usuario[] = [];
 
+  // Variables para seleccionar solicitudes y controlar modales.
+  // Variables para controlar detalles, edición y chat de solicitudes.
   solicitudSeleccionada: Solicitud | null = null;
   modalDetalleAbierto: boolean = false;
 
@@ -31,10 +37,13 @@ export class PanelAdmin {
   modalChatAbierto: boolean = false;
   mensajeChat: string = '';
 
+  // Variables para editar usuarios desde el panel.
   modalEditarUsuarioAbierto: boolean = false;
   idUsuarioEditando: string | undefined = undefined;
   mostrarPasswordUsuario: boolean = false;
 
+  // Ruta del logo utilizado en la exportación a Excel.
+  // Ruta del logo usado para el reporte en Excel.  
   private logoExcelUrl = '/img/logo.png';
 
   mensajeExitoPanel: string = '';
@@ -81,6 +90,8 @@ export class PanelAdmin {
 
   errorChat: string = '';
 
+  // Datos del formulario para registrar solicitudes manualmente.
+  // Datos del formulario de registro manual.
   registroManual = {
     servicio: 'Mantenimiento / Registro Manual',
     nombre: '',
@@ -92,6 +103,7 @@ export class PanelAdmin {
     estado: 'Recibido'
   };
 
+  // Datos temporales para editar una solicitud.
   solicitudEditando = {
     servicio: '',
     nombre: '',
@@ -103,6 +115,7 @@ export class PanelAdmin {
     estado: ''
   };
 
+  // Datos temporales para editar un usuario.
   usuarioEditando: Usuario = {
     nombre: '',
     apellido: '',
@@ -111,6 +124,7 @@ export class PanelAdmin {
     rol: 'usuario'
   };
 
+  // Constructor que carga las solicitudes y usuarios al iniciar el panel.
   constructor(
     private solicitudService: SolicitudService,
     private authService: AuthService
@@ -119,6 +133,7 @@ export class PanelAdmin {
     this.cargarUsuarios();
   }
 
+  // Limpiadores de mensajes y errores
   private limpiarMensajesGenerales() {
     this.mensajeExitoPanel = '';
     this.mensajeErrorPanel = '';
@@ -163,6 +178,7 @@ export class PanelAdmin {
     };
   }
 
+  // Validadores y formateadores de campos
   private correoValido(correo: string): boolean {
     const expresion = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return expresion.test(correo);
@@ -193,6 +209,7 @@ export class PanelAdmin {
     this.erroresUsuarioEditando.apellido = '';
   }
 
+  // Carga las solicitudes registradas desde MongoDB.
   cargarSolicitudes() {
     this.solicitudService.obtenerSolicitudesMongo().subscribe({
       next: (datos) => {
@@ -204,6 +221,7 @@ export class PanelAdmin {
     });
   }
 
+  // Carga los usuarios registrados desde MongoDB.
   cargarUsuarios() {
     this.authService.obtenerUsuarios().subscribe({
       next: (datos) => {
@@ -223,6 +241,7 @@ export class PanelAdmin {
     });
   }
 
+  // Gestión de registros manuales
   validarRegistroManual(): boolean {
     this.limpiarErroresRegistroManual();
 
@@ -278,6 +297,8 @@ export class PanelAdmin {
     return valido;
   }
 
+  // Guarda una solicitud creada manualmente desde el panel.
+  // Guarda una nueva solicitud creada manualmente desde el panel.  
   guardarRegistroManual(event: Event) {
     event.preventDefault();
     this.limpiarMensajesGenerales();
@@ -286,6 +307,7 @@ export class PanelAdmin {
       return;
     }
 
+    // Objeto que se envía al backend para guardar en MongoDB.
     const nuevaSolicitud: Solicitud = {
       servicio: this.registroManual.servicio.trim(),
       nombre: this.registroManual.nombre.trim(),
@@ -323,16 +345,20 @@ export class PanelAdmin {
     });
   }
 
+  // Abre el modal para ver el detalle de una solicitud.
+  // Abre el modal para ver los detalles de una solicitud.
   verDetalle(solicitud: Solicitud) {
     this.solicitudSeleccionada = solicitud;
     this.modalDetalleAbierto = true;
   }
 
+  // Cierra el modal de detalles.
   cerrarDetalle() {
     this.modalDetalleAbierto = false;
     this.solicitudSeleccionada = null;
   }
 
+  // Abre el modal para editar una solicitud.
   abrirEditar(solicitud: Solicitud) {
     this.idEditando = solicitud._id;
     this.limpiarErroresSolicitudEditando();
@@ -351,6 +377,7 @@ export class PanelAdmin {
     this.modalEditarAbierto = true;
   }
 
+  // Cierra el modal de edición de solicitud.
   cerrarEditar() {
     this.modalEditarAbierto = false;
     this.idEditando = undefined;
@@ -417,6 +444,7 @@ export class PanelAdmin {
     return valido;
   }
 
+  // Guarda los cambios realizados en una solicitud.
   guardarEdicion(event: Event) {
     event.preventDefault();
     this.limpiarMensajesGenerales();
@@ -442,6 +470,7 @@ export class PanelAdmin {
     });
   }
 
+  // Gestión de chat
   abrirChat(solicitud: Solicitud) {
     this.solicitudSeleccionada = solicitud;
     this.errorChat = '';
@@ -506,6 +535,7 @@ export class PanelAdmin {
     });
   }
 
+  // Actualización de estado y eliminación
   cambiarEstado(id: string | undefined, nuevoEstado: string) {
     if (!id) return;
 
@@ -537,6 +567,7 @@ export class PanelAdmin {
     this.modalConfirmacionAbierto = true;
   }
 
+  // Gestión de usuarios
   abrirEditarUsuario(usuario: Usuario) {
     this.idUsuarioEditando = usuario._id;
     this.mostrarPasswordUsuario = false;
@@ -657,6 +688,7 @@ export class PanelAdmin {
     this.modalConfirmacionAbierto = true;
   }
 
+  // Manejo de diálogos de confirmación
   cerrarConfirmacion() {
     this.modalConfirmacionAbierto = false;
     this.tituloConfirmacion = '';
@@ -703,6 +735,8 @@ export class PanelAdmin {
     }
   }
 
+  // Generación y exportación de archivos Excel
+  // Convierte el logo a Base64 para insertarlo en el Excel.
   private convertirBlobABase64(blob: Blob): Promise<string> {
     return new Promise((resolve, reject) => {
       const lector = new FileReader();
@@ -717,6 +751,7 @@ export class PanelAdmin {
     });
   }
 
+   // Obtiene el logo del sistema para usarlo en el Excel. 
   private async obtenerLogoBase64(): Promise<string | null> {
     try {
       const respuesta = await fetch(this.logoExcelUrl);
@@ -733,6 +768,7 @@ export class PanelAdmin {
     }
   }
 
+  // Genera y descarga un reporte Excel con las solicitudes registradas.  
   async exportarSolicitudesExcel() {
     this.limpiarMensajesGenerales();
 
@@ -746,6 +782,7 @@ export class PanelAdmin {
     workbook.creator = 'CrishoTech';
     workbook.created = new Date();
 
+    // Crea la hoja donde se cargan las solicitudes.    
     const worksheet = workbook.addWorksheet('Solicitudes', {
       pageSetup: {
         paperSize: 9,
@@ -763,6 +800,7 @@ export class PanelAdmin {
       }
     ];
 
+    // Define las columnas principales del reporte.    
     worksheet.columns = [
       { key: 'nro', width: 8 },
       { key: 'cliente', width: 28 },
@@ -835,6 +873,7 @@ export class PanelAdmin {
       fgColor: { argb: 'FFE0F2FE' }
     };
 
+    // Calcula el resumen de solicitudes por estado.
     const total = this.solicitudes.length;
     const recibidos = this.solicitudes.filter(item => item.estado === 'Recibido').length;
     const proceso = this.solicitudes.filter(item => item.estado === 'En Proceso').length;
@@ -905,6 +944,7 @@ export class PanelAdmin {
 
     worksheet.getRow(6).height = 28;
 
+    // Configura el encabezado de la tabla.
     const filaEncabezado = worksheet.getRow(8);
 
     filaEncabezado.values = [
@@ -950,6 +990,7 @@ export class PanelAdmin {
       };
     });
 
+    // Agrega cada solicitud al archivo Excel.
     this.solicitudes.forEach((item, index) => {
       const fila = worksheet.addRow({
         nro: index + 1,
@@ -1056,6 +1097,7 @@ export class PanelAdmin {
       };
     });
 
+    // Activa filtros en el reporte.    
     worksheet.autoFilter = {
       from: 'A8',
       to: `J${this.solicitudes.length + 8}`
@@ -1070,7 +1112,8 @@ export class PanelAdmin {
     };
 
     worksheet.mergeCells(`A${this.solicitudes.length + 10}:J${this.solicitudes.length + 10}`);
-
+    
+    // Genera y descarga el archivo Excel.
     const buffer = await workbook.xlsx.writeBuffer();
 
     const archivo = new Blob([buffer], {

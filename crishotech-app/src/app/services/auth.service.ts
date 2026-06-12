@@ -1,9 +1,11 @@
+// Importaciones necesarias para el servicio de autenticación.
 import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, tap } from 'rxjs';
 
 import { Usuario } from '../models/usuario';
 
+// Configuración del servicio para que esté disponible en toda la aplicación.
 @Injectable({
   providedIn: 'root'
 })
@@ -12,10 +14,10 @@ export class AuthService {
   // Ruta del backend para trabajar con usuarios en MongoDB.
   private apiUrl = 'http://localhost:3000/api/usuarios';
 
-  // Guardamos el usuario actual en una signal para que el header cambie automáticamente.
+  // Guarda el usuario actual en una signal para actualizar la interfaz automáticamente.
   usuarioActual = signal<Usuario | null>(this.obtenerUsuarioGuardado());
 
-  // Inyectamos HttpClient para poder comunicarnos con el backend.
+  // Inyecta HttpClient para comunicarse con el backend.
   constructor(private http: HttpClient) {}
 
   // Recupera el usuario guardado en localStorage si ya inició sesión antes.
@@ -53,6 +55,7 @@ export class AuthService {
       tap(respuesta => {
         const usuarioBackend = respuesta.usuario;
 
+        // Adapta los datos recibidos del backend al modelo usado en Angular.
         const usuarioSesion: Usuario = {
           _id: usuarioBackend._id,
           nombre: usuarioBackend.nombre,

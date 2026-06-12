@@ -1,7 +1,11 @@
+<!-- SECCIÓN PRINCIPAL DEL REGISTRO -->
 <section class="pt-32 pb-20 bg-gray-100 min-h-screen">
+
+  <!-- CONTENEDOR DEL FORMULARIO -->
   <div class="max-w-md mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
     <div class="p-8">
 
+      <!-- BOTONES PARA CAMBIAR ENTRE LOGIN Y REGISTRO -->
       <div class="flex justify-center mb-8">
         <div class="inline-flex rounded-lg bg-gray-100 p-1">
           <button
@@ -18,6 +22,7 @@
         </div>
       </div>
 
+      <!-- FORMULARIO DE REGISTRO DE USUARIO -->
       <form
         class="space-y-4"
         (submit)="registrarUsuario($event)"
@@ -28,12 +33,14 @@
           Crea tu cuenta
         </h2>
 
+        <!-- MENSAJE DE ÉXITO -->
         @if (mensajeExito) {
           <div class="bg-green-50 border border-green-300 text-green-700 text-sm p-3 rounded-xl text-center font-semibold">
             {{ mensajeExito }}
           </div>
         }
 
+        <!-- CAMPOS DE NOMBRE Y APELLIDO -->
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Nombre</label>
@@ -66,6 +73,7 @@
           </div>
         </div>
 
+        <!-- CAMPO EMAIL CON VALIDACIÓN EN TIEMPO REAL -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Email</label>
 
@@ -81,6 +89,7 @@
           }
         </div>
 
+        <!-- CAMPO CONTRASEÑA CON VALIDACIÓN EN TIEMPO REAL -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Contraseña</label>
 
@@ -96,6 +105,7 @@
           }
         </div>
 
+        <!-- CAMPO DE ROL SOLO DISPONIBLE PARA ADMINISTRADORES -->
         @if (authService.esAdmin()) {
           <div>
             <label class="block text-sm font-medium text-gray-700">
@@ -118,12 +128,14 @@
           </div>
         }
 
+        <!-- MENSAJE DE ERROR GENERAL -->
         @if (errorGeneral) {
           <p class="text-red-500 text-sm text-center font-semibold">
             {{ errorGeneral }}
           </p>
         }
 
+        <!-- BOTÓN PARA ENVIAR EL FORMULARIO -->
         <button
           type="submit"
           class="w-full bg-blue-600 py-4 text-white font-bold rounded-xl shadow-lg hover:bg-blue-700 transition">

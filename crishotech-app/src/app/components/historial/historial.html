@@ -1,38 +1,52 @@
+<!-- SECCIÓN PRINCIPAL DEL HISTORIAL DE SOLICITUDES -->
 <section class="pt-32 pb-20 bg-gray-50 min-h-screen">
+
+  <!-- CONTENEDOR CENTRAL DEL CONTENIDO -->
   <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
+    <!-- ENCABEZADO DEL HISTORIAL -->
     <div class="flex justify-between items-center mb-8">
+
+      <!-- TÍTULO DE LA VISTA -->
       <h2 class="text-3xl font-bold text-blue-900">
         Mis Solicitudes (Historial)
       </h2>
 
+      <!-- BOTÓN PARA VOLVER A LA PÁGINA PRINCIPAL -->
       <button routerLink="/" class="text-blue-600 font-semibold flex items-center gap-2 hover:text-blue-800 transition">
         <i class="fa-solid fa-house"></i>
         Volver a Inicio
       </button>
     </div>
 
+    <!-- MENSAJE DE ÉXITO DEL HISTORIAL -->
     @if (mensajeExitoHistorial) {
       <div class="mb-6 bg-green-50 border border-green-300 text-green-700 text-sm p-4 rounded-xl font-semibold">
         {{ mensajeExitoHistorial }}
       </div>
     }
 
+    <!-- MENSAJE DE ERROR DEL HISTORIAL -->
     @if (mensajeErrorHistorial) {
       <div class="mb-6 bg-red-50 border border-red-300 text-red-600 text-sm p-4 rounded-xl font-semibold">
         {{ mensajeErrorHistorial }}
       </div>
     }
 
+    <!-- MENSAJE DE AVISO DEL HISTORIAL -->
     @if (mensajeAvisoHistorial) {
       <div class="mb-6 bg-yellow-50 border border-yellow-300 text-yellow-700 text-sm p-4 rounded-xl font-semibold">
         {{ mensajeAvisoHistorial }}
       </div>
     }
 
+    <!-- CONTENEDOR DE LA TABLA DE SOLICITUDES -->
     <div class="bg-white rounded-3xl shadow-sm border border-gray-200 overflow-hidden">
 
+      <!-- TABLA DONDE SE LISTAN LAS SOLICITUDES DEL USUARIO -->
       <table class="w-full text-left">
+
+        <!-- CABECERA DE LA TABLA -->
         <thead class="bg-blue-50 border-b border-gray-200">
           <tr>
             <th class="px-6 py-4 text-xs font-bold text-gray-500 uppercase">
@@ -53,26 +67,38 @@
           </tr>
         </thead>
 
+        <!-- CUERPO DE LA TABLA -->
         <tbody class="divide-y divide-gray-100">
 
+          <!-- @for recorre las solicitudes obtenidas desde MongoDB -->
           @for (item of solicitudes; track item._id) {
+
+            <!-- FILA DE CADA SOLICITUD -->
             <tr class="hover:bg-white transition">
 
+              <!-- INFORMACIÓN PRINCIPAL DE LA SOLICITUD -->
               <td class="px-6 py-4">
+
+                <!-- NOMBRE DEL SERVICIO SOLICITADO -->
                 <div class="font-bold text-gray-800">
                   {{ item.servicio }}
                 </div>
 
+                <!-- DESCRIPCIÓN INGRESADA POR EL USUARIO -->
                 <div class="text-xs text-gray-500">
                   {{ item.descripcion }}
                 </div>
 
+                <!-- DATOS BÁSICOS DEL CLIENTE -->
                 <div class="text-xs text-gray-400 mt-1">
                   Cliente: {{ item.nombre }} | Tel: {{ item.telefono }}
                 </div>
               </td>
 
+              <!-- ESTADO ACTUAL DE LA SOLICITUD -->
               <td class="px-6 py-4">
+
+                <!-- Clases dinámicas según el estado de la solicitud -->
                 <span
                   class="px-3 py-1 text-[10px] font-bold rounded-full uppercase"
                   [class.bg-yellow-100]="item.estado === 'Recibido'"
@@ -85,13 +111,16 @@
                 </span>
               </td>
 
+              <!-- FECHA DE CREACIÓN DE LA SOLICITUD -->
               <td class="px-6 py-4 text-xs text-gray-500">
                 {{ item.fecha | date:'dd/MM/yyyy HH:mm' }}
               </td>
 
+              <!-- ACCIONES DISPONIBLES PARA CADA SOLICITUD -->
               <td class="px-6 py-4 text-center">
                 <div class="flex gap-2 justify-center">
 
+                  <!-- Botón para abrir el chat o seguimiento de la solicitud -->
                   <button
                     (click)="abrirChat(item)"
                     class="bg-blue-50 text-blue-600 p-2 rounded-lg hover:bg-blue-600 hover:text-white"
@@ -99,6 +128,7 @@
                     <i class="fa-solid fa-comments"></i>
                   </button>
 
+                  <!-- Botón para abrir la confirmación de eliminación -->
                   <button
                     (click)="eliminarSolicitud(item._id)"
                     class="bg-red-50 text-red-600 p-2 rounded-lg hover:bg-red-600 hover:text-white"
@@ -115,6 +145,7 @@
         </tbody>
       </table>
 
+      <!-- MENSAJE CUANDO EL USUARIO NO TIENE SOLICITUDES REGISTRADAS -->
       @if (solicitudes.length === 0) {
         <div class="p-12 text-center text-gray-400">
           <i class="fa-solid fa-folder-open text-5xl mb-4"></i>
@@ -127,18 +158,23 @@
   </div>
 </section>
 
-<!-- MODAL CHAT / SEGUIMIENTO DEL USUARIO -->
+<!-- MODAL DE CHAT Y SEGUIMIENTO DE LA SOLICITUD -->
 @if (modalChatAbierto && solicitudSeleccionada) {
   <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
 
+    <!-- CONTENEDOR PRINCIPAL DEL MODAL -->
     <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
 
+      <!-- ENCABEZADO DEL MODAL -->
       <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
+
+        <!-- TÍTULO DEL MODAL DE SEGUIMIENTO -->
         <h3 class="text-xl font-bold flex items-center gap-2">
           <i class="fa-solid fa-comment-dots"></i>
           Seguimiento del Requerimiento
         </h3>
 
+        <!-- BOTÓN PARA CERRAR EL MODAL -->
         <button
           (click)="cerrarChat()"
           class="text-white hover:text-gray-300 text-2xl">
@@ -146,10 +182,13 @@
         </button>
       </div>
 
+      <!-- CONTENIDO DEL MODAL -->
       <div class="p-6 overflow-y-auto space-y-6 flex-1">
 
+        <!-- INFORMACIÓN GENERAL DE LA SOLICITUD SELECCIONADA -->
         <div class="grid grid-cols-2 gap-4 bg-blue-50 p-5 rounded-2xl border border-blue-100">
 
+          <!-- NOMBRE DEL CLIENTE -->
           <div>
             <p class="text-[10px] font-bold text-blue-400 uppercase">
               Cliente
@@ -160,6 +199,7 @@
             </p>
           </div>
 
+          <!-- SERVICIO SOLICITADO -->
           <div>
             <p class="text-[10px] font-bold text-blue-400 uppercase">
               Servicio solicitado
@@ -170,6 +210,7 @@
             </p>
           </div>
 
+          <!-- DESCRIPCIÓN ORIGINAL DE LA SOLICITUD -->
           <div class="col-span-2">
             <p class="text-[10px] font-bold text-blue-400 uppercase">
               Descripción original
@@ -182,39 +223,49 @@
 
         </div>
 
+        <!-- SECCIÓN DE MENSAJES DEL CHAT -->
         <div class="space-y-4">
           <h4 class="font-bold text-slate-800 border-b pb-2">
             Mensajes de Soporte
           </h4>
 
+          <!-- MENSAJE DE ERROR DEL CHAT -->
           @if (errorChat) {
             <div class="bg-red-50 border border-red-300 text-red-600 text-sm p-3 rounded-xl">
               {{ errorChat }}
             </div>
           }
 
+          <!-- LISTADO DE MENSAJES DEL CHAT -->
           <div class="space-y-3 flex flex-col min-h-[150px] max-h-[300px] overflow-y-auto">
 
+            <!-- MENSAJE SI TODAVÍA NO EXISTE CHAT -->
             @if (!solicitudSeleccionada.chat || solicitudSeleccionada.chat.length === 0) {
               <p class="text-xs text-center text-gray-400 mt-4 italic">
                 No hay mensajes aún.
               </p>
             }
 
+            <!-- @for recorre los mensajes del chat de la solicitud -->
             @for (msg of solicitudSeleccionada.chat || []; track msg.fecha) {
+
+              <!-- BURBUJA DE MENSAJE CON ESTILO SEGÚN EL ROL -->
               <div
                 class="max-w-[80%] p-3 rounded-2xl text-xs shadow-sm"
                 [class.chat-bubble-me]="msg.rol === 'usuario'"
                 [class.chat-bubble-them]="msg.rol === 'admin'">
 
+                <!-- NOMBRE DE QUIEN ENVÍA EL MENSAJE -->
                 <p class="font-bold mb-1 text-[10px] opacity-75">
                   {{ msg.nombre }}
                 </p>
 
+                <!-- CONTENIDO DEL MENSAJE -->
                 <p>
                   {{ msg.mensaje }}
                 </p>
 
+                <!-- FECHA DEL MENSAJE -->
                 <p class="text-[9px] opacity-60 mt-1">
                   {{ msg.fecha | date:'dd/MM/yyyy HH:mm' }}
                 </p>
@@ -226,10 +277,12 @@
 
       </div>
 
+      <!-- FORMULARIO PARA ENVIAR MENSAJES AL CHAT -->
       <form
         class="p-4 border-t bg-gray-50 flex gap-2"
         (submit)="enviarMensajeChat($event)">
 
+        <!-- Campo enlazado con ngModel para escribir el mensaje -->
         <input
           type="text"
           [(ngModel)]="mensajeChat"
@@ -237,6 +290,7 @@
           placeholder="Escribe un mensaje..."
           class="flex-1 px-4 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-blue-500">
 
+        <!-- Botón para enviar el mensaje -->
         <button
           type="submit"
           class="bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700">
@@ -250,12 +304,14 @@
   </div>
 }
 
-<!-- MODAL CONFIRMACIÓN ELIMINAR DEL HISTORIAL -->
+<!-- MODAL DE CONFIRMACIÓN PARA ELIMINAR UNA SOLICITUD DEL HISTORIAL -->
 @if (modalConfirmacionAbierto) {
   <div class="fixed inset-0 z-[120] flex items-center justify-center p-4 modal-overlay">
 
+    <!-- CONTENEDOR DEL MODAL DE CONFIRMACIÓN -->
     <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
 
+      <!-- ENCABEZADO DE ALERTA -->
       <div class="bg-red-600 p-6 text-white">
         <h3 class="text-xl font-bold flex items-center gap-2">
           <i class="fa-solid fa-triangle-exclamation"></i>
@@ -263,13 +319,18 @@
         </h3>
       </div>
 
+      <!-- CUERPO DEL MODAL -->
       <div class="p-8 space-y-4">
 
+        <!-- MENSAJE DE CONFIRMACIÓN -->
         <p class="text-gray-700 text-sm">
           ¿Seguro que deseas eliminar esta solicitud del historial?
         </p>
 
+        <!-- BOTONES DE CONFIRMACIÓN O CANCELACIÓN -->
         <div class="flex gap-3 pt-4">
+
+          <!-- Botón que confirma la eliminación de la solicitud -->
           <button
             type="button"
             (click)="confirmarEliminacion()"
@@ -277,6 +338,7 @@
             Sí, eliminar
           </button>
 
+          <!-- Botón que cancela la eliminación y cierra el modal -->
           <button
             type="button"
             (click)="cerrarConfirmacion()"

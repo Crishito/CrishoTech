@@ -10,7 +10,6 @@ import { AuthService } from '../../services/auth.service';
   selector: 'app-servicios',
   imports: [FormsModule],
   templateUrl: './servicios.html',
-  styleUrl: './servicios.css',
 })
 export class Servicios {
 
@@ -20,6 +19,7 @@ export class Servicios {
     private router: Router
   ) {}
 
+  // Variables para controlar el modal y mensajes en pantalla
   modalAbierto = false;
   servicioSeleccionado = '';
 
@@ -27,6 +27,7 @@ export class Servicios {
   mensajeErrorSolicitud = '';
   mensajeAvisoPagina = '';
 
+  // Modelo de datos para el formulario de la solicitud
   solicitud = {
     nombre: '',
     cedula: '',
@@ -36,6 +37,7 @@ export class Servicios {
     descripcion: ''
   };
 
+  // Variables para almacenar errores de validación de cada campo
   errores = {
     nombre: '',
     cedula: '',
@@ -45,6 +47,7 @@ export class Servicios {
     descripcion: ''
   };
 
+  // Catálogo de servicios disponibles en la página
   servicios = [
     {
       nombre: 'Mantenimiento Preventivo',
@@ -78,6 +81,7 @@ export class Servicios {
     }
   ];
 
+  // Controla la apertura del modal validando si hay sesión iniciada y el rol del usuario
   abrirModal(nombreServicio: string) {
     this.mensajeAvisoPagina = '';
     this.mensajeExitoSolicitud = '';
@@ -107,6 +111,7 @@ export class Servicios {
     this.modalAbierto = true;
   }
 
+  // Cierra el modal y resetea los estados de error y mensajes
   cerrarModal() {
     this.modalAbierto = false;
     this.mensajeExitoSolicitud = '';
@@ -125,6 +130,7 @@ export class Servicios {
     };
   }
 
+  // Restringe la entrada del teclado permitiendo solo números y teclas de control
   bloquearLetras(event: KeyboardEvent) {
     const teclasPermitidas = [
       'Backspace',
@@ -144,6 +150,7 @@ export class Servicios {
     }
   }
 
+  // Filtros aplicados a los inputs para evitar caracteres inválidos mientras se escribe
   limpiarNombre() {
     this.solicitud.nombre = this.solicitud.nombre.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '');
     this.validarNombreEnTiempoReal();
@@ -159,6 +166,7 @@ export class Servicios {
     this.validarTelefonoEnTiempoReal();
   }
 
+  // Validaciones en tiempo real que se ejecutan mientras el usuario teclea
   validarNombreEnTiempoReal() {
     const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
@@ -223,6 +231,7 @@ export class Servicios {
     }
   }
 
+  // Validación final al intentar enviar el formulario y proceso de agregar al carrito
   guardarSolicitud(event: Event) {
     event.preventDefault();
 

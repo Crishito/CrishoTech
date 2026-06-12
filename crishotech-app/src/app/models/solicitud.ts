@@ -1,3 +1,4 @@
+// Interfaz que define la estructura de cada mensaje del chat.
 export interface MensajeChat {
   rol: 'usuario' | 'admin';
   nombre: string;
@@ -5,6 +6,7 @@ export interface MensajeChat {
   fecha?: string;
 }
 
+// Interfaz que define la estructura de una solicitud de servicio.
 export interface Solicitud {
   _id?: string;
   id?: number;

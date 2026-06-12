@@ -1,11 +1,16 @@
+<!-- SECCIÓN PRINCIPAL DEL PANEL ADMINISTRATIVO -->
 <section class="pt-32 py-24 bg-gray-50 border-y border-gray-200 min-h-screen">
+
+  <!-- CONTENEDOR GENERAL DEL PANEL -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
+    <!-- ENCABEZADO DEL PANEL -->
     <div class="flex justify-between items-center mb-10">
       <h2 class="text-3xl font-bold text-blue-900">
         Panel Maestro Técnico
       </h2>
 
+      <!-- BOTÓN PARA VOLVER AL INICIO -->
       <button
         routerLink="/"
         class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-md flex items-center gap-2 transition">
@@ -14,39 +19,45 @@
       </button>
     </div>
 
+    <!-- MENSAJE DE ÉXITO DEL PANEL -->
     @if (mensajeExitoPanel) {
       <div class="mb-6 bg-green-50 border border-green-300 text-green-700 text-sm p-4 rounded-xl font-semibold">
         {{ mensajeExitoPanel }}
       </div>
     }
 
+    <!-- MENSAJE DE ERROR DEL PANEL -->
     @if (mensajeErrorPanel) {
       <div class="mb-6 bg-red-50 border border-red-300 text-red-600 text-sm p-4 rounded-xl font-semibold">
         {{ mensajeErrorPanel }}
       </div>
     }
 
-    <!-- FORMULARIO REGISTRO MANUAL -->
+    <!-- FORMULARIO PARA REGISTRAR MANUALMENTE UNA SOLICITUD -->
     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200 mb-10">
       <h3 class="text-lg font-bold mb-4 flex items-center gap-2 text-blue-900">
         <i class="fa-solid fa-plus-circle"></i>
         Nuevo Registro Manual
       </h3>
 
+      <!-- FORMULARIO DE REGISTRO MANUAL -->
       <form class="space-y-4" (submit)="guardarRegistroManual($event)" novalidate>
 
+        <!-- MENSAJE DE ERROR GENERAL DEL REGISTRO MANUAL -->
         @if (erroresRegistroManual.general) {
           <div class="bg-red-50 border border-red-300 text-red-600 text-sm p-3 rounded-xl">
             {{ erroresRegistroManual.general }}
           </div>
         }
 
+        <!-- MENSAJE DE ÉXITO DEL REGISTRO MANUAL -->
         @if (mensajeRegistroManual) {
           <div class="bg-green-50 border border-green-300 text-green-700 text-sm p-3 rounded-xl">
             {{ mensajeRegistroManual }}
           </div>
         }
 
+        <!-- CAMPOS PRINCIPALES DEL CLIENTE -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">
@@ -106,6 +117,7 @@
           </div>
         </div>
 
+        <!-- CAMPOS DE CONTACTO Y ESTADO -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label class="block text-xs font-semibold text-gray-700 mb-1">
@@ -159,6 +171,7 @@
           </div>
         </div>
 
+        <!-- CAMPO DEL SERVICIO SOLICITADO -->
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">
             Servicio
@@ -177,6 +190,7 @@
           }
         </div>
 
+        <!-- CAMPO DE DESCRIPCIÓN DEL PROBLEMA -->
         <div>
           <label class="block text-xs font-semibold text-gray-700 mb-1">
             Descripción / Problema
@@ -196,6 +210,7 @@
           }
         </div>
 
+        <!-- BOTÓN PARA GUARDAR EL REGISTRO MANUAL -->
         <div class="flex justify-end">
           <button
             type="submit"
@@ -207,15 +222,17 @@
       </form>
     </div>
 
-    <!-- TABLA ADMIN SOLICITUDES -->
+    <!-- TABLA ADMINISTRATIVA DE SOLICITUDES -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden mb-10">
 
+      <!-- ENCABEZADO DE LA TABLA DE SOLICITUDES -->
       <div class="px-6 py-5 border-b bg-white flex items-center justify-between">
         <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
           <i class="fa-solid fa-list-check"></i>
           Solicitudes Registradas
         </h3>
 
+        <!-- BOTÓN PARA EXPORTAR SOLICITUDES A EXCEL -->
         <button
           type="button"
           (click)="exportarSolicitudesExcel()"
@@ -227,6 +244,7 @@
 
       <div class="overflow-x-auto">
 
+        <!-- TABLA DE SOLICITUDES GUARDADAS EN MONGODB -->
         <table class="w-full text-left">
           <thead class="bg-gray-50 border-b border-gray-100">
             <tr>
@@ -254,10 +272,12 @@
 
           <tbody class="divide-y divide-gray-100">
 
+            <!-- *ngFor recorre todas las solicitudes obtenidas desde el backend -->
             <tr
               *ngFor="let item of solicitudes"
               class="hover:bg-blue-50/30 transition">
 
+              <!-- DATOS DEL CLIENTE -->
               <td class="px-6 py-4">
                 <div class="text-sm font-bold text-gray-900">
                   {{ item.nombre }}
@@ -268,6 +288,7 @@
                 </div>
               </td>
 
+              <!-- DATOS DEL SERVICIO SOLICITADO -->
               <td class="px-6 py-4">
                 <div class="font-bold text-blue-800 text-[12px]">
                   {{ item.servicio }}
@@ -282,6 +303,7 @@
                 </div>
               </td>
 
+              <!-- DATOS DE CONTACTO -->
               <td class="px-6 py-4">
                 <div class="text-[11px] text-gray-600">
                   {{ item.telefono }}
@@ -296,6 +318,7 @@
                 </div>
               </td>
 
+              <!-- CAMBIO DE ESTADO DE LA SOLICITUD -->
               <td class="px-6 py-4">
                 <select
                   [ngModel]="item.estado"
@@ -307,6 +330,7 @@
                 </select>
               </td>
 
+              <!-- BOTONES DE ACCIÓN PARA CADA SOLICITUD -->
               <td class="px-6 py-4">
                 <div class="flex gap-2 justify-center">
 
@@ -346,6 +370,7 @@
           </tbody>
         </table>
 
+        <!-- MENSAJE CUANDO NO EXISTEN SOLICITUDES -->
         <div *ngIf="solicitudes.length === 0" class="p-12 text-center text-gray-400">
           <i class="fa-solid fa-clipboard-list text-5xl mb-4"></i>
           <p>No existen solicitudes confirmadas todavía.</p>
@@ -354,15 +379,17 @@
       </div>
     </div>
 
-    <!-- TABLA USUARIOS -->
+    <!-- TABLA ADMINISTRATIVA DE USUARIOS -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
 
+      <!-- ENCABEZADO DE LA TABLA DE USUARIOS -->
       <div class="px-6 py-5 border-b bg-white flex items-center justify-between">
         <h3 class="text-lg font-bold text-blue-900 flex items-center gap-2">
           <i class="fa-solid fa-users-gear"></i>
           Usuarios Registrados
         </h3>
 
+        <!-- BOTÓN PARA CREAR UN NUEVO USUARIO -->
         <button
           routerLink="/registro"
           class="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-md transition flex items-center gap-2">
@@ -373,6 +400,7 @@
 
       <div class="overflow-x-auto">
 
+        <!-- TABLA DE USUARIOS REGISTRADOS -->
         <table class="w-full text-left">
           <thead class="bg-gray-50 border-b border-gray-100">
             <tr>
@@ -396,10 +424,12 @@
 
           <tbody class="divide-y divide-gray-100">
 
+            <!-- *ngFor recorre todos los usuarios registrados -->
             <tr
               *ngFor="let user of usuarios"
               class="hover:bg-purple-50/30 transition">
 
+              <!-- DATOS DEL USUARIO -->
               <td class="px-6 py-4">
                 <div class="text-sm font-bold text-gray-900">
                   {{ user.nombre }} {{ user.apellido }}
@@ -410,12 +440,14 @@
                 </div>
               </td>
 
+              <!-- CORREO DEL USUARIO -->
               <td class="px-6 py-4">
                 <div class="text-[12px] text-gray-700">
                   {{ user.email }}
                 </div>
               </td>
 
+              <!-- ROL DEL USUARIO -->
               <td class="px-6 py-4">
                 <span
                   class="px-3 py-1 rounded-full text-[10px] font-bold uppercase"
@@ -427,6 +459,7 @@
                 </span>
               </td>
 
+              <!-- ACCIONES PARA USUARIO -->
               <td class="px-6 py-4">
                 <div class="flex gap-2 justify-center">
 
@@ -452,6 +485,7 @@
           </tbody>
         </table>
 
+        <!-- MENSAJE CUANDO NO EXISTEN USUARIOS -->
         <div *ngIf="usuarios.length === 0" class="p-12 text-center text-gray-400">
           <i class="fa-solid fa-users text-5xl mb-4"></i>
           <p>No existen usuarios registrados todavía.</p>
@@ -463,13 +497,14 @@
   </div>
 </section>
 
-<!-- MODAL VER DETALLES ADMIN -->
+<!-- MODAL PARA VER DETALLES DE UNA SOLICITUD -->
 <div
   *ngIf="modalDetalleAbierto && solicitudSeleccionada"
   class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
 
   <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
 
+    <!-- ENCABEZADO DEL MODAL DE DETALLE -->
     <div class="bg-sky-600 p-6 text-white flex justify-between items-center">
       <h3 class="text-xl font-bold flex items-center gap-2">
         <i class="fa-solid fa-address-card"></i>
@@ -483,6 +518,7 @@
       </button>
     </div>
 
+    <!-- INFORMACIÓN COMPLETA DE LA SOLICITUD SELECCIONADA -->
     <div class="p-8 space-y-4 text-sm text-gray-700">
 
       <p><strong>Cliente:</strong> <span>{{ solicitudSeleccionada.nombre }}</span></p>
@@ -521,6 +557,7 @@
 
     </div>
 
+    <!-- BOTÓN PARA CERRAR EL MODAL -->
     <div class="p-4 border-t bg-gray-50 text-right">
       <button
         (click)="cerrarDetalle()"
@@ -533,13 +570,14 @@
 
 </div>
 
-<!-- MODAL EDITAR SOLICITUD -->
+<!-- MODAL PARA EDITAR SOLICITUD -->
 <div
   *ngIf="modalEditarAbierto"
   class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
 
   <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
 
+    <!-- ENCABEZADO DEL MODAL DE EDICIÓN -->
     <div class="bg-green-600 p-6 text-white flex justify-between items-center">
       <h3 class="text-xl font-bold flex items-center gap-2">
         <i class="fa-solid fa-pen"></i>
@@ -553,6 +591,7 @@
       </button>
     </div>
 
+    <!-- FORMULARIO PARA EDITAR UNA SOLICITUD EXISTENTE -->
     <form class="p-8 space-y-4" (submit)="guardarEdicion($event)" novalidate>
 
       @if (erroresSolicitudEditando.general) {
@@ -579,6 +618,7 @@
         }
       </div>
 
+      <!-- DATOS PERSONALES DE LA SOLICITUD -->
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-bold text-gray-500 uppercase">
@@ -619,6 +659,7 @@
         </div>
       </div>
 
+      <!-- CONTACTO DE LA SOLICITUD -->
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-bold text-gray-500 uppercase">
@@ -716,6 +757,7 @@
         }
       </div>
 
+      <!-- BOTONES DEL FORMULARIO DE EDICIÓN -->
       <div class="flex gap-3 pt-2">
         <button
           type="submit"
@@ -737,13 +779,14 @@
 
 </div>
 
-<!-- MODAL EDITAR USUARIO -->
+<!-- MODAL PARA EDITAR USUARIO -->
 <div
   *ngIf="modalEditarUsuarioAbierto"
   class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
 
   <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden">
 
+    <!-- ENCABEZADO DEL MODAL DE USUARIO -->
     <div class="bg-purple-600 p-6 text-white flex justify-between items-center">
       <h3 class="text-xl font-bold flex items-center gap-2">
         <i class="fa-solid fa-user-pen"></i>
@@ -757,6 +800,7 @@
       </button>
     </div>
 
+    <!-- FORMULARIO PARA EDITAR DATOS DE USUARIO -->
     <form class="p-8 space-y-4" (submit)="guardarEdicionUsuario($event)" novalidate>
 
       @if (erroresUsuarioEditando.general) {
@@ -765,6 +809,7 @@
         </div>
       }
 
+      <!-- NOMBRE Y APELLIDO DEL USUARIO -->
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-xs font-bold text-gray-500 uppercase">
@@ -805,6 +850,7 @@
         </div>
       </div>
 
+      <!-- CORREO DEL USUARIO -->
       <div>
         <label class="block text-xs font-bold text-gray-500 uppercase">
           Correo
@@ -823,6 +869,7 @@
         }
       </div>
 
+      <!-- CONTRASEÑA OPCIONAL DEL USUARIO -->
       <div>
         <label class="block text-xs font-bold text-gray-500 uppercase">
           Nueva Contraseña
@@ -856,6 +903,7 @@
         </p>
       </div>
 
+      <!-- ROL DEL USUARIO -->
       <div>
         <label class="block text-xs font-bold text-gray-500 uppercase">
           Rol
@@ -876,6 +924,7 @@
         }
       </div>
 
+      <!-- BOTONES DEL FORMULARIO DE USUARIO -->
       <div class="flex gap-3 pt-2">
         <button
           type="submit"
@@ -897,13 +946,14 @@
 
 </div>
 
-<!-- MODAL CHAT / SEGUIMIENTO -->
+<!-- MODAL DE CHAT O SEGUIMIENTO ENTRE ADMINISTRADOR Y USUARIO -->
 <div
   *ngIf="modalChatAbierto && solicitudSeleccionada"
   class="fixed inset-0 z-[100] flex items-center justify-center p-4 modal-overlay">
 
   <div class="bg-white w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
 
+    <!-- ENCABEZADO DEL CHAT -->
     <div class="bg-blue-900 p-6 text-white flex justify-between items-center">
       <h3 class="text-xl font-bold flex items-center gap-2">
         <i class="fa-solid fa-comment-dots"></i>
@@ -917,8 +967,10 @@
       </button>
     </div>
 
+    <!-- CONTENIDO DEL CHAT -->
     <div class="p-6 overflow-y-auto space-y-6 flex-1">
 
+      <!-- INFORMACIÓN GENERAL DE LA SOLICITUD -->
       <div class="grid grid-cols-2 gap-4 bg-blue-50 p-5 rounded-2xl border border-blue-100">
 
         <div>
@@ -953,6 +1005,7 @@
 
       </div>
 
+      <!-- LISTADO DE MENSAJES DEL CHAT -->
       <div class="space-y-4">
         <h4 class="font-bold text-slate-800 border-b pb-2">
           Mensajes de Soporte
@@ -966,12 +1019,14 @@
 
         <div class="space-y-3 flex flex-col min-h-[150px] max-h-[300px] overflow-y-auto">
 
+          <!-- MENSAJE SI NO HAY CHAT -->
           <p
             *ngIf="!solicitudSeleccionada.chat || solicitudSeleccionada.chat.length === 0"
             class="text-xs text-center text-gray-400 mt-4 italic">
             No hay mensajes aún.
           </p>
 
+          <!-- *ngFor recorre los mensajes del chat -->
           <div
             *ngFor="let msg of solicitudSeleccionada.chat || []"
             class="max-w-[80%] p-3 rounded-2xl text-xs shadow-sm"
@@ -996,6 +1051,7 @@
 
     </div>
 
+    <!-- FORMULARIO PARA ENVIAR MENSAJES DE CHAT -->
     <form
       class="p-4 border-t bg-gray-50 flex gap-2"
       (submit)="enviarMensajeChat($event)">
@@ -1019,12 +1075,13 @@
 
 </div>
 
-<!-- MODAL CONFIRMACIÓN ELIMINAR -->
+<!-- MODAL DE CONFIRMACIÓN PARA ELIMINAR REGISTROS -->
 @if (modalConfirmacionAbierto) {
   <div class="fixed inset-0 z-[120] flex items-center justify-center p-4 modal-overlay">
 
     <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
 
+      <!-- ENCABEZADO DE CONFIRMACIÓN -->
       <div class="bg-red-600 p-6 text-white">
         <h3 class="text-xl font-bold flex items-center gap-2">
           <i class="fa-solid fa-triangle-exclamation"></i>
@@ -1032,12 +1089,14 @@
         </h3>
       </div>
 
+      <!-- MENSAJE DE CONFIRMACIÓN -->
       <div class="p-8 space-y-4">
 
         <p class="text-gray-700 text-sm">
           {{ mensajeConfirmacion }}
         </p>
 
+        <!-- BOTONES PARA CONFIRMAR O CANCELAR -->
         <div class="flex gap-3 pt-4">
           <button
             type="button"

@@ -6,8 +6,8 @@ import { Component } from '@angular/core';
   selector: 'app-footer',
   imports: [],
   templateUrl: './footer.html',
-  styleUrl: './footer.css',
 })
 
-// COMPONENTE FOOTER
+// Clase principal del componente Footer.
+// Este componente muestra la parte inferior de la aplicación, incluyendo enlaces, contacto y derechos de autor.
 export class Footer {}

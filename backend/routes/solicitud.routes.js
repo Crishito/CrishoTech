@@ -3,22 +3,23 @@ const router = express.Router();
 
 const Solicitud = require('../models/solicitud.model');
 
-// Función para validar correo electrónico.
+// Función con expresión regular para validar el formato del correo electrónico.
 const correoValido = (correo) => {
   const expresion = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return expresion.test(correo);
 };
 
-// Función para validar que un texto tenga solo letras y espacios.
+// Función para asegurar que el texto contenga únicamente letras y espacios (sin números ni símbolos).
 const soloLetras = (texto) => {
   const expresion = /^[a-zA-ZÁÉÍÓÚáéíóúÑñ\s]+$/;
   return expresion.test(texto);
 };
 
-// Función para validar los datos principales de una solicitud.
+// Valida que todos los campos requeridos de la solicitud existan y tengan el formato correcto.
 const validarSolicitud = (datos) => {
   const errores = [];
 
+  // Validaciones individuales por campo...
   if (!datos.servicio || datos.servicio.trim() === '') {
     errores.push('El servicio es obligatorio.');
   }
@@ -62,7 +63,7 @@ const validarSolicitud = (datos) => {
   return errores;
 };
 
-// CREATE - guardar una nueva solicitud en MongoDB
+// CREATE - Recibe los datos, los valida y si están correctos, guarda la nueva solicitud en MongoDB.
 router.post('/', async (req, res) => {
   try {
     const errores = validarSolicitud(req.body);
@@ -102,7 +103,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// READ - obtener todas las solicitudes
+// READ - Obtiene el listado completo de solicitudes ordenadas de más reciente a más antigua.
 router.get('/', async (req, res) => {
   try {
     const solicitudes = await Solicitud.find().sort({ fecha: -1 });
@@ -117,11 +118,12 @@ router.get('/', async (req, res) => {
   }
 });
 
-// CHAT - agregar mensaje al chat de una solicitud
+// CHAT - Agrega un nuevo mensaje de texto al array del chat dentro de una solicitud específica.
 router.put('/:id/chat', async (req, res) => {
   try {
     const { rol, nombre, mensaje } = req.body;
 
+    // Validaciones para asegurar que el mensaje tenga un remitente y contenido válido.
     if (!rol || !nombre || !mensaje) {
       return res.status(400).json({
         mensaje: 'Faltan datos para enviar el mensaje.'
@@ -176,7 +178,7 @@ router.put('/:id/chat', async (req, res) => {
   }
 });
 
-// UPDATE - actualizar solicitud por id
+// UPDATE - Actualiza los datos de una solicitud existente buscando por su ID.
 router.put('/:id', async (req, res) => {
   try {
     /*
@@ -186,6 +188,7 @@ router.put('/:id', async (req, res) => {
     const soloEstado = Object.keys(req.body).length === 1 && req.body.estado;
     const soloChat = Object.keys(req.body).length === 1 && req.body.chat;
 
+    // Si es una actualización completa, valida todos los campos.
     if (!soloEstado && !soloChat) {
       const errores = validarSolicitud(req.body);
 
@@ -203,6 +206,7 @@ router.put('/:id', async (req, res) => {
       });
     }
 
+    // Limpieza de espacios y formateo antes de actualizar la base de datos.
     const datosActualizados = { ...req.body };
 
     if (datosActualizados.correo) {
@@ -229,7 +233,7 @@ router.put('/:id', async (req, res) => {
       req.params.id,
       datosActualizados,
       {
-        new: true,
+        new: true, // Retorna el documento ya con los datos nuevos
         runValidators: true
       }
     );
@@ -253,7 +257,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// DELETE - eliminar solicitud por id
+// DELETE - Busca una solicitud por su ID y la elimina definitivamente de la colección.
 router.delete('/:id', async (req, res) => {
   try {
     const solicitudEliminada = await Solicitud.findByIdAndDelete(req.params.id);
