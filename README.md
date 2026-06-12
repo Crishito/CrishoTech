@@ -1,7 +1,10 @@
 ```markdown
 # CrishoTech
 
-CrishoTech es una aplicación web desarrollada con Angular, Node.js, Express y MongoDB, orientada a la gestión de servicios técnicos informáticos. El sistema permite registrar usuarios, iniciar sesión, solicitar servicios, administrar solicitudes, gestionar usuarios y dar seguimiento mediante un chat entre cliente y administrador.
+CrishoTech es una aplicación web desarrollada con Angular, Node.js, Express y MongoDB,
+orientada a la gestión de servicios técnicos informáticos. El sistema permite registrar
+usuarios, iniciar sesión, solicitar servicios, administrar solicitudes, gestionar usuarios
+y dar seguimiento mediante un chat entre cliente y administrador.
 
 ## Tecnologías utilizadas
 
